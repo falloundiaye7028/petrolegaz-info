@@ -49,7 +49,7 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 <a href="annuaire.html">Annuaire</a>
 <a href="appels-offres.html">Appels d'offres</a>
 <a href="dashboard.html">Dashboard</a>
-<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME." target="_blank" class="btn-wa">Inscrire ma PME</a>
+<a href="inscription.html" class="btn-wa">Inscrire ma PME</a>
 </div>
 </div>
 </header>
@@ -75,20 +75,22 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 <section class="cta-section">
 <h2>Votre PME n'est pas encore inscrite ?</h2>
 <p>Rejoignez l'annuaire et soyez visible auprès des donneurs d'ordre.</p>
-<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME%20gratuitement." target="_blank" class="cta-btn">Inscrire ma PME gratuitement →</a>
+<a href="inscription.html" class="cta-btn">Inscrire ma PME gratuitement →</a>
 </section>
 
 <script>
-const pmes = [
-  { nom: "Diallo & Fils SARL", secteur: "Transport", localisation: "Dakar", description: "Spécialiste du transport routier de matériel industriel et logistique de chantier. Flotte de 15 camions et 8 véhicules 4x4.", competences: ["Transport routier", "Logistique", "HSE"], verifie: true },
-  { nom: "Teranga Sécurité", secteur: "Sécurité", localisation: "Thiès", description: "Société de sécurité privée agréée. Gardiennage de sites industriels et pétroliers. 120 agents formés.", competences: ["Sécurité industrielle", "HSE"], verifie: true },
-  { nom: "Sahel Restauration", secteur: "Restauration", localisation: "Saint-Louis", description: "Restauration collective pour bases-vie et chantiers. Capacité 500 repas/jour. Certification HACCP.", competences: ["Restauration collective"], verifie: true },
-  { nom: "Sénégal Maintenance Industrielle", secteur: "Maintenance", localisation: "Dakar", description: "Maintenance électromécanique, soudure, tuyauterie. Intervention sur sites pétroliers et gaziers.", competences: ["Maintenance industrielle", "Soudure", "Électricité"], verifie: true },
-  { nom: "Baobab BTP", secteur: "BTP", localisation: "Mbour", description: "Construction de bases-vie, génie civil, VRD. Références sur sites industriels.", competences: ["BTP", "Génie civil"], verifie: true },
-  { nom: "Atlantique Ingénierie", secteur: "Ingénierie", localisation: "Dakar", description: "Bureau d'études techniques. Ingénierie pétrolière, environnementale et HSE.", competences: ["Ingénierie", "HSE", "Environnement"], verifie: true },
-  { nom: "Formation Pro Sénégal", secteur: "Formation", localisation: "Dakar", description: "Centre de formation professionnelle. Formations HSE, sécurité industrielle et techniques pétrolières.", competences: ["Formation", "HSE"], verifie: true },
-  { nom: "Logistique Atlantique", secteur: "Transport", localisation: "Dakar", description: "Logistique portuaire et transport de conteneurs. Partenaire des principaux ports sénégalais.", competences: ["Logistique", "Transport routier"], verifie: true },
-];
+let pmes = [];
+let secteurActif = '';
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;',
+  })[character]);
+}
 
 function render(secteur = "") {
   const grid = document.getElementById('grid');
@@ -100,12 +102,12 @@ function render(secteur = "") {
   grid.innerHTML = filtered.map(p => `
     <div class="card">
       <div class="card-header">
-        <h3>${p.nom}</h3>
+        <h3>${escapeHtml(p.nom)}</h3>
         ${p.verifie ? '<span class="badge">✓ Vérifié</span>' : ''}
       </div>
-      <div class="card-meta">📍 ${p.localisation} · 🏢 ${p.secteur}</div>
-      <p class="card-desc">${p.description}</p>
-      <div class="tags">${p.competences.map(c => `<span class="tag">${c}</span>`).join('')}</div>
+      <div class="card-meta">📍 ${escapeHtml(p.localisation)} · 🏢 ${escapeHtml(p.secteur)}</div>
+      <p class="card-desc">${escapeHtml(p.description)}</p>
+      <div class="tags">${p.competences.slice(0, 5).map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('')}</div>
       <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20contacter%20${encodeURIComponent(p.nom)}" target="_blank" class="contact-btn">Contacter cette PME</a>
     </div>
   `).join('');
@@ -115,11 +117,28 @@ document.querySelectorAll('.filter').forEach(f => {
   f.addEventListener('click', () => {
     document.querySelectorAll('.filter').forEach(x => x.classList.remove('active'));
     f.classList.add('active');
-    render(f.dataset.secteur);
+    secteurActif = f.dataset.secteur || '';
+    render(secteurActif);
   });
 });
 
-render();
+async function loadPMEs() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '<div class="empty"><p>Chargement des PME...</p></div>';
+
+  try {
+    const response = await fetch('/api/pmes', { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    pmes = Array.isArray(data.pmes) ? data.pmes : [];
+    render(secteurActif);
+  } catch (error) {
+    console.error('Chargement de l’annuaire impossible', error);
+    grid.innerHTML = '<div class="empty"><p>Impossible de charger les PME. Réessayez dans quelques instants.</p></div>';
+  }
+}
+
+loadPMEs();
 </script>
 </body>
 </html>
