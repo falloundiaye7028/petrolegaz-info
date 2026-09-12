@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription PME — PétroleGaz Info</title>
+<meta name="description" content="Inscrivez votre PME gratuitement sur PétroleGaz Info et soyez visible auprès des donneurs d'ordre du secteur pétrolier et gazier.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢️</text></svg>">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #F8FAFC; color: #0F172A; }
+header { background: white; border-bottom: 1px solid #E2E8F0; padding: 16px 24px; position: sticky; top: 0; z-index: 100; }
+.nav { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 20px; font-weight: 800; color: #0B3D91; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { color: #64748B; text-decoration: none; font-size: 14px; font-weight: 500; }
+.nav-links a:hover { color: #0B3D91; }
+.btn-wa { background: #25D366; color: white !important; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.btn-wa:hover { background: #1EBE5D; }
+.hero-inscription { background: linear-gradient(135deg, #0A1628 0%, #062A66 100%); color: white; padding: 60px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+.hero-inscription::before { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(244,196,48,0.15), transparent 70%); border-radius: 50%; }
+.hero-content { max-width: 780px; margin: 0 auto; position: relative; z-index: 2; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(244,196,48,0.15); color: #F4C430; padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(244,196,48,0.3); }
+.hero-badge .dot { width: 8px; height: 8px; background: #F4C430; border-radius: 50%; }
+.hero-inscription h1 { font-size: 40px; font-weight: 800; line-height: 1.15; letter-spacing: -1px; margin-bottom: 16px; }
+.hero-inscription h1 span { color: #F4C430; }
+.hero-inscription p { font-size: 17px; color: rgba(255,255,255,0.85); max-width: 600px; margin: 0 auto; }
+.hero-steps { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 32px; font-size: 14px; }
+.hero-steps span { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.85); }
+.form-container { max-width: 780px; margin: -40px auto 64px; padding: 0 24px; position: relative; z-index: 3; }
+.form-card { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.12); padding: 8px; overflow: hidden; }
+.form-card iframe { width: 100%; border: none; display: block; border-radius: 16px; }
+.info-panel { max-width: 780px; margin: 0 auto 64px; padding: 0 24px; }
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.info-item { background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; text-align: center; }
+.info-icon { font-size: 28px; margin-bottom: 8px; }
+.info-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: #0F172A; }
+.info-desc { font-size: 13px; color: #64748B; line-height: 1.5; }
+.alt-contact { max-width: 780px; margin: 0 auto 64px; padding: 0 24px; text-align: center; }
+.alt-contact p { color: #64748B; font-size: 14px; margin-bottom: 16px; }
+.alt-contact a { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; }
+.alt-contact a:hover { background: #1EBE5D; }
+footer { background: #0A1628; color: #94A3B8; padding: 40px 24px 24px; text-align: center; font-size: 13px; }
+footer a { color: #94A3B8; text-decoration: none; margin: 0 12px; }
+footer a:hover { color: white; }
+.footer-links { margin-bottom: 16px; }
+@media (max-width: 768px) {
+  .nav-links a:not(.btn-wa) { display: none; }
+  .hero-inscription { padding: 48px 20px 64px; }
+  .hero-inscription h1 { font-size: 28px; }
+  .hero-inscription p { font-size: 15px; }
+  .hero-steps { gap: 16px; font-size: 13px; }
+  .info-grid { grid-template-columns: 1fr; }
+  .form-container { padding: 0 16px; margin-bottom: 40px; }
+  .form-card { padding: 4px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <a href="index.html" class="logo">🛢️ PétroleGaz Info</a>
+    <div class="nav-links">
+      <a href="annuaire.html">Annuaire</a>
+      <a href="appels-offres.html">Appels d'offres</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="https://wa.me/221778001717?text=Bonjour%2C%20j%27ai%20une%20question." target="_blank" rel="noopener" class="btn-wa">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</header>
+<section class="hero-inscription">
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span>Inscription gratuite · Vérification en 48h</div>
+    <h1>Inscrivez votre PME sur <span>PétroleGaz Info</span></h1>
+    <p>Remplissez le formulaire ci-dessous. Notre équipe vérifie vos informations et vous notifie par email sous 48h ouvrées.</p>
+    <div class="hero-steps">
+      <span>✍️ Remplir le formulaire</span>
+      <span>✓ Vérification sous 48h</span>
+      <span>🚀 Profil visible dans l'annuaire</span>
+    </div>
+  </div>
+</section>
+<div class="form-container">
+  <div class="form-card">
+    <iframe data-tally-src="https://tally.so/embed/KY90vK?alignLeft=1&amp;hideTitle=1&amp;transparentBackground=1&amp;dynamicHeight=1" loading="lazy" width="100%" height="1200" frameborder="0" marginheight="0" marginwidth="0" title="Inscription PME — PétroleGaz Info"></iframe>
+  </div>
+</div>
+<div class="info-panel">
+  <div class="info-grid">
+    <div class="info-item"><div class="info-icon">🔒</div><div class="info-title">Données sécurisées</div><div class="info-desc">Conformité CDP. Vos informations sont chiffrées et confidentielles.</div></div>
+    <div class="info-item"><div class="info-icon">✅</div><div class="info-title">Vérification 48h</div><div class="info-desc">Notre équipe contrôle votre NINEA et votre RCCM avant publication.</div></div>
+    <div class="info-item"><div class="info-icon">💚</div><div class="info-title">Gratuit à vie</div><div class="info-desc">Le profil Basique est gratuit pour toujours. Sans engagement.</div></div>
+  </div>
+</div>
+<div class="alt-contact">
+  <p>Un problème avec le formulaire ? Contactez-nous directement sur WhatsApp.</p>
+  <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME%20sur%20PétroleGaz%20Info." target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Contacter sur WhatsApp
+  </a>
+</div>
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Accueil</a><a href="annuaire.html">Annuaire</a><a href="appels-offres.html">Appels d'offres</a><a href="legal/mentions-legales.html">Mentions légales</a><a href="legal/confidentialite.html">Confidentialité</a>
+  </div>
+  <p>© 2026 PétroleGaz Info — Dakar, Sénégal</p>
+</footer>
+<script>
+  var d = document, w = "https://tally.so/widgets/embed.js";
+  var loadEmbeds = function() {
+    if (typeof Tally !== "undefined") {
+      Tally.loadEmbeds();
+    } else {
+      d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach(function(e) { e.src = e.dataset.tallySrc; });
+    }
+  };
+  if (d.querySelector('script[src="' + w + '"]') == null) {
+    var s = d.createElement("script");
+    s.src = w;
+    s.onload = loadEmbeds;
+    s.onerror = loadEmbeds;
+    d.body.appendChild(s);
+  } else {
+    loadEmbeds();
+  }
+</script>
+</body>
+</html>
