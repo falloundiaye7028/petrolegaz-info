@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Appels d'offres — PétroleGaz Info</title>
+<!--
+  MAINTENANCE : mettre à jour le tableau `aos` ci-dessous
+  toutes les 2 à 4 semaines pour conserver des échéances futures.
+  Le badge (urgent / normal / nouveau) est calculé automatiquement.
+-->
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #F8FAFC; color: #0F172A; }
@@ -26,6 +31,7 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 .ao-badge.urgent { background: #FEE2E2; color: #991B1B; }
 .ao-badge.normal { background: #FEF3C7; color: #92400E; }
 .ao-badge.new { background: #DCFCE7; color: #166534; }
+.ao-badge.closed { background: #E2E8F0; color: #475569; }
 .ao p { color: #334155; font-size: 14px; margin-bottom: 16px; line-height: 1.6; }
 .ao-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #64748B; margin-bottom: 16px; }
 .btn-primary { display: inline-block; background: #0B3D91; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; }
@@ -54,13 +60,18 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 </div>
 
 <script>
+// ─────────────────────────────────────────────────────────────
+// TABLEAU À METTRE À JOUR RÉGULIÈREMENT
+// Remplacer les dates `cloture` par des échéances futures.
+// Format : YYYY-MM-DD
+// ─────────────────────────────────────────────────────────────
 const aos = [
-  { titre: "Transport de matériel vers le site GTA", description: "BP recherche un prestataire pour le transport de matériel industriel vers le site Grand Tortue Ahmeyim. 15 camions requis, 6 mois de contrat.", donneur: "BP Sénégal", localisation: "Saint-Louis", cloture: "2026-01-28" },
-  { titre: "Services de restauration collective — 150 personnes", description: "Woodside recherche un prestataire de restauration collective pour une base-vie de 150 personnes. Contrat 12 mois renouvelable.", donneur: "Woodside", localisation: "Dakar", cloture: "2026-02-02" },
-  { titre: "Maintenance électromécanique — terminal pétrolier", description: "PETROSEN recherche un prestataire pour la maintenance électromécanique de son terminal pétrolier de Dakar. Contrat 24 mois.", donneur: "PETROSEN", localisation: "Dakar", cloture: "2026-02-15" },
-  { titre: "Fourniture d'EPI et équipements de sécurité", description: "Un sous-traitant de premier rang recherche un fournisseur d'équipements de protection individuelle et de sécurité pour ses équipes.", donneur: "Sous-traitant Tier 1", localisation: "Thiès", cloture: "2026-02-20" },
-  { titre: "Logistique de personnel — 200 rotations/mois", description: "Woodside recherche un prestataire pour la logistique de son personnel : 200 rotations mensuelles entre Dakar et Saint-Louis.", donneur: "Woodside", localisation: "Dakar", cloture: "2026-02-10" },
-  { titre: "Étude d'impact environnemental — bloc offshore", description: "Une compagnie pétrolière recherche un bureau d'études pour la réalisation d'une étude d'impact environnemental sur un bloc offshore.", donneur: "Compagnie internationale", localisation: "Dakar", cloture: "2026-02-25" },
+  { titre: "Transport de matériel vers le site GTA", description: "BP recherche un prestataire pour le transport de matériel industriel vers le site Grand Tortue Ahmeyim. 15 camions requis, 6 mois de contrat.", donneur: "BP Sénégal", localisation: "Saint-Louis", cloture: "2026-09-15" },
+  { titre: "Services de restauration collective — 150 personnes", description: "Woodside recherche un prestataire de restauration collective pour une base-vie de 150 personnes. Contrat 12 mois renouvelable.", donneur: "Woodside", localisation: "Dakar", cloture: "2026-09-18" },
+  { titre: "Maintenance électromécanique — terminal pétrolier", description: "PETROSEN recherche un prestataire pour la maintenance électromécanique de son terminal pétrolier de Dakar. Contrat 24 mois.", donneur: "PETROSEN", localisation: "Dakar", cloture: "2026-09-25" },
+  { titre: "Fourniture d'EPI et équipements de sécurité", description: "Un sous-traitant de premier rang recherche un fournisseur d'équipements de protection individuelle et de sécurité pour ses équipes.", donneur: "Sous-traitant Tier 1", localisation: "Thiès", cloture: "2026-09-30" },
+  { titre: "Logistique de personnel — 200 rotations/mois", description: "Woodside recherche un prestataire pour la logistique de son personnel : 200 rotations mensuelles entre Dakar et Saint-Louis.", donneur: "Woodside", localisation: "Dakar", cloture: "2026-10-10" },
+  { titre: "Étude d'impact environnemental — bloc offshore", description: "Une compagnie pétrolière recherche un bureau d'études pour la réalisation d'une étude d'impact environnemental sur un bloc offshore.", donneur: "Compagnie internationale", localisation: "Dakar", cloture: "2026-10-20" },
 ];
 
 function formatDate(d) { return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
@@ -68,8 +79,11 @@ function joursRestants(d) { return Math.ceil((new Date(d) - new Date()) / (1000 
 
 document.getElementById('ao-list').innerHTML = aos.map(ao => {
   const jours = joursRestants(ao.cloture);
-  const cls = jours <= 7 ? 'urgent' : (jours <= 15 ? 'normal' : 'new');
-  const badge = jours <= 0 ? 'Clôturé' : `J-${jours}`;
+  let cls, badge;
+  if (jours <= 0) { cls = 'closed'; badge = 'Clôturé'; }
+  else if (jours <= 7) { cls = 'urgent'; badge = `J-${jours}`; }
+  else if (jours <= 15) { cls = 'normal'; badge = `J-${jours}`; }
+  else { cls = 'new'; badge = `J-${jours}`; }
   return `
     <div class="ao">
       <div class="ao-header">
