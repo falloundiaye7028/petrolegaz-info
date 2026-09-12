@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PétroleGaz Info — Votre PME mérite sa part du pétrole et du gaz sénégalais</title>
+<meta name="description" content="La plateforme qui connecte les PME sénégalaises aux donneurs d'ordre du secteur pétrolier, gazier et minier. Annuaire vérifié, veille sur les appels d'offres, mise en relation directe.">
+<meta name="keywords" content="contenu local Sénégal, pétrole gaz Sénégal, PME secteur extractif, appels d'offres pétrole, CNSCL, PETROSEN, sous-traitance pétrolière">
+<meta property="og:title" content="PétroleGaz Info — Votre PME mérite sa part du pétrole sénégalais">
+<meta property="og:description" content="La plateforme qui connecte les PME sénégalaises aux donneurs d'ordre du secteur pétrolier, gazier et minier.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢️</text></svg>">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --brand: #0B3D91;
+    --brand-dark: #062A66;
+    --brand-light: #E6EEFB;
+    --accent: #F4C430;
+    --accent-dark: #D4A017;
+    --text: #0F172A;
+    --text-muted: #64748B;
+    --border: #E2E8F0;
+    --bg-light: #F8FAFC;
+    --bg-dark: #0A1628;
+    --whatsapp: #25D366;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    background: white;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* HEADER */
+  header {
+    position: sticky; top: 0;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+  }
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+  .logo {
+    font-size: 22px; font-weight: 800; color: var(--brand);
+    text-decoration: none; display: flex; align-items: center; gap: 10px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 20px;
+  }
+  .logo-text small {
+    display: block; font-size: 10px; color: var(--text-muted);
+    font-weight: 500; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none;
+    font-size: 15px; font-weight: 500; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--brand); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 22px; border-radius: 8px; font-size: 15px; font-weight: 600;
+    text-decoration: none; cursor: pointer; border: none;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .btn-primary { background: var(--brand); color: white; }
+  .btn-primary:hover {
+    background: var(--brand-dark); transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(11, 61, 145, 0.3);
+  }
+  .btn-outline {
+    background: white; color: var(--brand); border: 2px solid var(--brand);
+  }
+  .btn-outline:hover { background: var(--brand-light); }
+  .btn-accent { background: var(--accent); color: var(--brand-dark); }
+  .btn-accent:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-white { background: white; color: var(--brand); }
+  .btn-white:hover { background: #f0f0f0; }
+  .btn-whatsapp { background: var(--whatsapp); color: white; }
+  .btn-whatsapp:hover { background: #1EBE5D; transform: translateY(-1px); }
+  .btn-lg { padding: 16px 32px; font-size: 16px; }
+  .btn-block { width: 100%; }
+
+  .menu-toggle {
+    display: none; background: none; border: none;
+    font-size: 24px; cursor: pointer; color: var(--text);
+  }
+
+  /* HERO */
+  .hero {
+    padding: 100px 0 80px;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--brand-dark) 100%);
+    color: white; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(244, 196, 48, 0.15), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(11, 61, 145, 0.4), transparent 50%);
+    z-index: 1;
+  }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: 60px; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(244, 196, 48, 0.15); color: var(--accent);
+    padding: 8px 16px; border-radius: 50px; font-size: 14px; font-weight: 600;
+    margin-bottom: 24px; border: 1px solid rgba(244, 196, 48, 0.3);
+  }
+  .hero-badge .dot {
+    width: 8px; height: 8px; background: var(--accent);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-size: 48px; font-weight: 800; line-height: 1.15;
+    letter-spacing: -1px; margin-bottom: 24px;
+  }
+  .hero h1 span { color: var(--accent); display: block; }
+  .hero p {
+    font-size: 18px; color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 36px; max-width: 560px;
+  }
+  .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .hero-note {
+    font-size: 14px; color: rgba(255, 255, 255, 0.7);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-note svg { color: var(--accent); }
+
+  .hero-visual {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px; padding: 24px; position: relative;
+  }
+  .hero-visual-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+  }
+  .hero-visual-title {
+    font-size: 14px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .hero-visual-live {
+    font-size: 12px; display: flex; align-items: center;
+    gap: 6px; color: rgba(255, 255, 255, 0.7);
+  }
+  .live-dot {
+    width: 8px; height: 8px; background: #22c55e;
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  .opportunity-item {
+    padding: 14px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 12px;
+  }
+  .opportunity-item:last-child { border-bottom: none; }
+  .opp-title {
+    font-size: 13px; font-weight: 600; color: white;
+    margin-bottom: 4px; line-height: 1.4;
+  }
+  .opp-meta { font-size: 11px; color: rgba(255, 255, 255, 0.55); }
+  .opp-badge {
+    background: rgba(244, 196, 48, 0.2); color: var(--accent);
+    padding: 3px 10px; border-radius: 20px; font-size: 10px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .opp-badge.new { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+  /* STATS BAR */
+  .stats-bar { background: white; border-bottom: 1px solid var(--border); padding: 40px 0; }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 32px; text-align: center;
+  }
+  .stat-value {
+    font-size: 36px; font-weight: 800; color: var(--brand);
+    line-height: 1; margin-bottom: 8px;
+  }
+  .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+  /* SECTION */
+  section { padding: 96px 0; }
+  .section-label {
+    display: inline-block; background: var(--brand-light); color: var(--brand);
+    padding: 6px 14px; border-radius: 50px; font-size: 12px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 42px; font-weight: 800; letter-spacing: -1px;
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .section-subtitle { font-size: 18px; color: var(--text-muted); margin-bottom: 56px; }
+  .text-center { text-align: center; }
+
+  /* PROBLEM */
+  .problem { background: var(--bg-light); }
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 48px;
+  }
+  .problem-item {
+    padding: 32px 28px; border-radius: 16px; background: white;
+    border: 1px solid var(--border); transition: all 0.3s;
+  }
+  .problem-item:hover {
+    transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+    border-color: var(--brand);
+  }
+  .problem-icon {
+    width: 56px; height: 56px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin-bottom: 20px; background: var(--brand-light);
+  }
+  .problem-item h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .problem-item p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+
+  /* SOLUTION */
+  .solution { background: white; }
+  .solution-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 24px; margin-top: 48px;
+  }
+  .solution-card {
+    background: white; border-radius: 16px; padding: 32px;
+    border: 1px solid var(--border); transition: all 0.3s;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .solution-card:hover {
+    transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+    border-color: var(--brand);
+  }
+  .solution-icon {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+  }
+  .solution-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .solution-card p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+
+  /* HOW IT WORKS */
+  .how-it-works { background: var(--bg-light); }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 32px; margin-top: 48px; position: relative;
+  }
+  .step { text-align: center; position: relative; }
+  .step-number {
+    width: 64px; height: 64px; background: var(--brand); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 800; margin: 0 auto 20px;
+    border: 6px solid white; box-shadow: 0 0 0 2px var(--brand);
+  }
+  .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .step p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+
+  /* PREVIEW */
+  .preview-section { background: white; }
+  .preview-wrapper {
+    max-width: 1000px; margin: 48px auto 0; background: white;
+    border-radius: 16px; border: 1px solid var(--border);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1); overflow: hidden;
+  }
+  .preview-topbar {
+    background: #1e293b; padding: 12px 20px;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .preview-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .preview-dot.red { background: #ef4444; }
+  .preview-dot.yellow { background: #eab308; }
+  .preview-dot.green { background: #22c55e; }
+  .preview-url {
+    margin-left: 16px; background: rgba(255, 255, 255, 0.1);
+    padding: 4px 12px; border-radius: 6px; font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .preview-body {
+    display: grid; grid-template-columns: 240px 1fr; min-height: 500px;
+  }
+  .preview-sidebar {
+    background: #f8fafc; border-right: 1px solid var(--border);
+    padding: 20px 16px;
+  }
+  .preview-sidebar-logo {
+    font-size: 16px; font-weight: 800; color: var(--brand);
+    margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+  }
+  .preview-nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 8px; font-size: 13px;
+    color: var(--text-muted); margin-bottom: 4px; font-weight: 500;
+  }
+  .preview-nav-item.active { background: var(--brand); color: white; }
+  .preview-main { padding: 28px; background: white; }
+  .preview-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .preview-header h3 { font-size: 20px; font-weight: 700; }
+  .preview-header p { font-size: 13px; color: var(--text-muted); }
+  .preview-kpis {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--bg-light); padding: 16px;
+    border-radius: 10px; border: 1px solid var(--border);
+  }
+  .kpi-value {
+    font-size: 28px; font-weight: 800; color: var(--brand);
+    line-height: 1; margin-bottom: 4px;
+  }
+  .kpi-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .preview-list-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .preview-list-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--border); gap: 12px;
+  }
+  .preview-list-item:last-child { border-bottom: none; }
+  .preview-list-title-text { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .preview-list-meta { font-size: 11px; color: var(--text-muted); }
+  .badge {
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; white-space: nowrap;
+  }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+
+  /* PRICING */
+  .pricing { background: var(--bg-light); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 48px; max-width: 1040px;
+    margin-left: auto; margin-right: auto;
+  }
+  .price-card {
+    background: white; border-radius: 20px; padding: 36px 28px;
+    border: 2px solid var(--border); text-align: center;
+    position: relative; transition: all 0.3s;
+  }
+  .price-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+  .price-card.featured {
+    border-color: var(--brand);
+    box-shadow: 0 20px 40px rgba(11, 61, 145, 0.15);
+    transform: scale(1.03);
+  }
+  .price-card.featured:hover { transform: scale(1.03) translateY(-6px); }
+  .featured-badge {
+    position: absolute; top: -14px; left: 50%;
+    transform: translateX(-50%); background: var(--brand); color: white;
+    padding: 6px 18px; border-radius: 50px; font-size: 12px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .price-name { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .price-desc {
+    font-size: 13px; color: var(--text-muted);
+    margin-bottom: 20px; min-height: 20px;
+  }
+  .price-amount {
+    font-size: 40px; font-weight: 800; color: var(--brand);
+    line-height: 1; margin-bottom: 6px;
+  }
+  .price-amount small { font-size: 15px; color: var(--text-muted); font-weight: 500; }
+  .price-period { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
+  .price-features {
+    list-style: none; text-align: left; margin-bottom: 28px;
+    padding-top: 24px; border-top: 1px solid var(--border);
+  }
+  .price-features li {
+    padding: 8px 0; font-size: 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .price-features li svg {
+    flex-shrink: 0; color: var(--brand); margin-top: 3px;
+  }
+  .price-features li.disabled { color: var(--text-muted); opacity: 0.5; }
+  .price-features li.disabled svg { color: var(--text-muted); }
+
+  /* FAQ */
+  .faq { background: white; }
+  .faq-list {
+    max-width: 800px; margin: 48px auto 0; background: white;
+    border-radius: 16px; border: 1px solid var(--border); overflow: hidden;
+  }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-question {
+    width: 100%; padding: 24px; background: none; border: none;
+    text-align: left; font-size: 16px; font-weight: 600;
+    cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; gap: 16px; font-family: inherit;
+    color: var(--text); transition: background 0.2s;
+  }
+  .faq-question:hover { background: var(--bg-light); }
+  .faq-icon {
+    flex-shrink: 0; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: var(--brand); transition: transform 0.3s;
+  }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .faq-item.open .faq-answer { max-height: 500px; }
+  .faq-answer-inner {
+    padding: 0 24px 24px; color: var(--text-muted);
+    font-size: 15px; line-height: 1.7;
+  }
+
+  /* CTA FINAL */
+  .cta-final {
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--brand-dark) 100%);
+    color: white; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-final::before {
+    content: ''; position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(244, 196, 48, 0.15), transparent 70%);
+    border-radius: 50%;
+  }
+  .cta-final .container { position: relative; z-index: 2; }
+  .cta-final h2 {
+    font-size: 42px; font-weight: 800;
+    letter-spacing: -1px; margin-bottom: 16px; line-height: 1.2;
+  }
+  .cta-final p { font-size: 18px; opacity: 0.9; margin-bottom: 36px; }
+  .cta-features {
+    display: flex; justify-content: center; gap: 32px;
+    flex-wrap: wrap; margin-top: 32px; font-size: 14px; opacity: 0.9;
+  }
+  .cta-features span { display: flex; align-items: center; gap: 8px; }
+
+  /* WHATSAPP FLOATING BUTTON */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    background: var(--whatsapp);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+    z-index: 999;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .whatsapp-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(37, 211, 102, 0.5);
+  }
+  .whatsapp-float svg { width: 32px; height: 32px; fill: white; }
+  .whatsapp-float::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--whatsapp);
+    animation: whatsappPulse 2s infinite;
+    z-index: -1;
+  }
+  @keyframes whatsappPulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  /* FOOTER */
+  footer { background: #0A1628; color: #94a3b8; padding: 64px 0 32px; }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 48px;
+  }
+  .footer-brand {
+    font-size: 22px; font-weight: 800; color: white;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .footer-brand-icon {
+    width: 32px; height: 32px; background: var(--accent);
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; color: var(--brand-dark); font-size: 16px;
+  }
+  .footer-brand-desc { font-size: 14px; line-height: 1.7; max-width: 340px; }
+  .footer-col h4 {
+    color: white; font-size: 14px; font-weight: 700;
+    margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .footer-col a {
+    display: block; color: #94a3b8; text-decoration: none;
+    font-size: 14px; padding: 6px 0; transition: color 0.2s;
+  }
+  .footer-col a:hover { color: white; }
+  .footer-bottom {
+    border-top: 1px solid #1e293b; padding-top: 32px;
+    text-align: center; font-size: 13px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 968px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero h1 { font-size: 36px; }
+    .solution-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+    .price-card.featured { transform: scale(1); }
+    .price-card.featured:hover { transform: translateY(-6px); }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .preview-body { grid-template-columns: 1fr; }
+    .preview-sidebar { display: none; }
+    .section-title { font-size: 32px; }
+    .cta-final h2 { font-size: 30px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .steps-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+    .nav-links { display: none; }
+    .nav-links.mobile-open {
+      display: flex; flex-direction: column; position: absolute;
+      top: 100%; left: 0; right: 0; background: white;
+      padding: 24px; border-bottom: 1px solid var(--border);
+      gap: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    }
+    .menu-toggle { display: block; }
+    .hero { padding: 60px 0 40px; }
+    .hero h1 { font-size: 30px; }
+    .hero p { font-size: 16px; }
+    section { padding: 64px 0; }
+    .section-title { font-size: 26px; }
+    .section-subtitle { font-size: 16px; margin-bottom: 32px; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .cta-final h2 { font-size: 24px; }
+    .cta-features { flex-direction: column; gap: 12px; }
+    .preview-kpis { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .whatsapp-float { bottom: 16px; right: 16px; width: 54px; height: 54px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <nav class="nav">
+      <a href="#" class="logo">
+        <span class="logo-icon">🛢️</span>
+        <span class="logo-text">
+          PétroleGaz Info
+          <small>Contenu local Sénégal</small>
+        </span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#solution">Solution</a>
+        <a href="#how">Comment ça marche</a>
+        <a href="#preview">Aperçu</a>
+        <a href="#pricing">Tarifs</a>
+        <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20avoir%20des%20informations%20sur%20PétroleGaz%20Info." target="_blank" rel="noopener" class="btn btn-outline">Connexion</a>
+        <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME%20sur%20PétroleGaz%20Info.%20Pouvez-vous%20m%27envoyer%20le%20formulaire%20d%27inscription%20%3F" target="_blank" rel="noopener" class="btn btn-whatsapp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Inscrire ma PME
+        </a>
+      </div>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-content">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          La plateforme du contenu local sénégalais
+        </div>
+        <h1>
+          Votre PME mérite sa part du<br>
+          <span>pétrole et du gaz sénégalais.</span>
+        </h1>
+        <p>La plateforme qui connecte les PME sénégalaises aux donneurs d'ordre du secteur pétrolier, gazier et minier. Annuaire vérifié, veille sur les appels d'offres, mise en relation directe.</p>
+        <div class="hero-buttons">
+          <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME%20gratuitement%20sur%20PétroleGaz%20Info.%20Pouvez-vous%20m%27envoyer%20le%20formulaire%20d%27inscription%20%3F" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Inscrire ma PME gratuitement
+          </a>
+          <a href="#preview" class="btn btn-outline btn-lg" style="background: transparent; color: white; border-color: rgba(255,255,255,0.3);">Voir la plateforme</a>
+        </div>
+        <div class="hero-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Profil gratuit · Vérification en 48h · Sans engagement
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-visual-header">
+          <div class="hero-visual-title">Opportunités récentes</div>
+          <div class="hero-visual-live">
+            <span class="live-dot"></span>
+            En direct
+          </div>
+        </div>
+        <div class="opportunity-item">
+          <div>
+            <div class="opp-title">Transport de matériel vers le site GTA</div>
+            <div class="opp-meta">BP · Saint-Louis · Clôture 28/01</div>
+          </div>
+          <span class="opp-badge new">Nouveau</span>
+        </div>
+        <div class="opportunity-item">
+          <div>
+            <div class="opp-title">Services de restauration collective — 150 personnes</div>
+            <div class="opp-meta">Woodside · Dakar · Clôture 02/02</div>
+          </div>
+          <span class="opp-badge">Urgent</span>
+        </div>
+        <div class="opportunity-item">
+          <div>
+            <div class="opp-title">Maintenance électromécanique — terminal pétrolier</div>
+            <div class="opp-meta">PETROSEN · Dakar · Clôture 15/02</div>
+          </div>
+          <span class="opp-badge">Vérifié</span>
+        </div>
+        <div class="opportunity-item">
+          <div>
+            <div class="opp-title">Fourniture d'EPI et équipements de sécurité</div>
+            <div class="opp-meta">Sous-traitant Tier 1 · Thiès · Clôture 20/02</div>
+          </div>
+          <span class="opp-badge">Vérifié</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-value">10+</div>
+        <div class="stat-label">Nouveaux marchés publiés chaque semaine</div>
+      </div>
+      <div>
+        <div class="stat-value">500+</div>
+        <div class="stat-label">PME potentiellement concernées au Sénégal</div>
+      </div>
+      <div>
+        <div class="stat-value">17</div>
+        <div class="stat-label">Pays OHADA couverts par la loi sur le contenu local</div>
+      </div>
+      <div>
+        <div class="stat-value">2030</div>
+        <div class="stat-label">Objectif 50% de contenu local dans le secteur</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">Le problème</span>
+      <h2 class="section-title">Le secteur extractif vous semble<br>fermé et réservé aux initiés.</h2>
+      <p class="section-subtitle">Pourtant, la loi sur le contenu local vous ouvre des opportunités concrètes.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-item">
+        <div class="problem-icon">📋</div>
+        <h3>Information dispersée</h3>
+        <p>Les appels d'offres sont publiés sur plusieurs plateformes (CNSCL, PETROSEN, compagnies). Vous perdez du temps à chercher.</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon">🔒</div>
+        <h3>Secteur perçu comme fermé</h3>
+        <p>Vous ne savez pas comment vous positionner, quelles compétences mettre en avant, ni à qui vous adresser.</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon">🤝</div>
+        <h3>Aucun contact direct</h3>
+        <p>Les donneurs d'ordre cherchent des fournisseurs locaux fiables, mais n'ont pas d'annuaire structuré pour les trouver.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution" id="solution">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">La solution</span>
+      <h2 class="section-title">La plateforme qui connecte<br>les PME aux donneurs d'ordre.</h2>
+      <p class="section-subtitle">Tout ce qu'il faut pour être visible, informé et contacté.</p>
+    </div>
+    <div class="solution-grid">
+      <div class="solution-card">
+        <div class="solution-icon">🔍</div>
+        <div>
+          <h3>Annuaire des PME vérifiées</h3>
+          <p>Votre fiche entreprise avec secteur, compétences, certifications et contacts. Vérifiée par notre équipe pour garantir la crédibilité.</p>
+        </div>
+      </div>
+      <div class="solution-card">
+        <div class="solution-icon">📡</div>
+        <div>
+          <h3>Veille sur les appels d'offres</h3>
+          <p>Centralisation quotidienne des opportunités publiées par le CNSCL, PETROSEN, BP, Woodside et les sous-traitants de premier rang.</p>
+        </div>
+      </div>
+      <div class="solution-card">
+        <div class="solution-icon">🤝</div>
+        <div>
+          <h3>Mise en relation directe</h3>
+          <p>Les donneurs d'ordre vous contactent directement via la plateforme. Vous recevez une notification à chaque demande.</p>
+        </div>
+      </div>
+      <div class="solution-card">
+        <div class="solution-icon">📊</div>
+        <div>
+          <h3>Tableau de bord PME</h3>
+          <p>Suivez vos statistiques : nombre de vues sur votre profil, demandes reçues, opportunités correspondant à votre secteur.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">Comment ça marche</span>
+      <h2 class="section-title">3 étapes pour être visible<br>auprès des donneurs d'ordre.</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Créez votre profil</h3>
+        <p>Renseignez votre NINEA, votre secteur, vos compétences et vos certifications. 5 minutes suffisent.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Faites-vous vérifier</h3>
+        <p>Notre équipe vérifie vos informations sous 48h. Vous recevez le badge « Vérifié » qui rassure les donneurs d'ordre.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Recevez des demandes</h3>
+        <p>Les donneurs d'ordre vous trouvent dans l'annuaire et vous contactent directement via la plateforme.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREVIEW -->
+<section class="preview-section" id="preview">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">Aperçu</span>
+      <h2 class="section-title">Voici à quoi ressemble<br>la plateforme.</h2>
+      <p class="section-subtitle">Un tableau de bord clair, des opportunités filtrées, des demandes de contact centralisées.</p>
+    </div>
+
+    <div class="preview-wrapper">
+      <div class="preview-topbar">
+        <div class="preview-dot red"></div>
+        <div class="preview-dot yellow"></div>
+        <div class="preview-dot green"></div>
+        <div class="preview-url">petrolegaz.sn/dashboard</div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-sidebar">
+          <div class="preview-sidebar-logo">
+            <span style="font-size: 16px;">🛢️</span>
+            PétroleGaz Info
+          </div>
+          <div class="preview-nav-item active">📊 Tableau de bord</div>
+          <div class="preview-nav-item">📡 Appels d'offres</div>
+          <div class="preview-nav-item">👥 Annuaire PME</div>
+          <div class="preview-nav-item">💬 Demandes reçues</div>
+          <div class="preview-nav-item">📄 Mon profil</div>
+          <div class="preview-nav-item">⚙️ Paramètres</div>
+        </div>
+
+        <div class="preview-main">
+          <div class="preview-header">
+            <div>
+              <h3>Bonjour, Diallo &amp; Fils 👋</h3>
+              <p>Profil vérifié · Secteur Logistique &amp; Transport</p>
+            </div>
+            <span class="badge badge-green">✓ Vérifié</span>
+          </div>
+
+          <div class="preview-kpis">
+            <div class="kpi-card">
+              <div class="kpi-value">142</div>
+              <div class="kpi-label">Vues du profil (30j)</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value">8</div>
+              <div class="kpi-label">Demandes de contact</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value">23</div>
+              <div class="kpi-label">AO correspondants</div>
+            </div>
+          </div>
+
+          <div class="preview-list-title">Dernières opportunités correspondant à votre profil</div>
+          <div class="preview-list-item">
+            <div>
+              <div class="preview-list-title-text">Transport de matériel vers le site GTA</div>
+              <div class="preview-list-meta">BP · Saint-Louis · Clôture dans 5 jours</div>
+            </div>
+            <span class="badge badge-red">Urgent</span>
+          </div>
+          <div class="preview-list-item">
+            <div>
+              <div class="preview-list-title-text">Logistique de personnel — 200 rotations/mois</div>
+              <div class="preview-list-meta">Woodside · Dakar · Clôture dans 12 jours</div>
+            </div>
+            <span class="badge badge-yellow">À étudier</span>
+          </div>
+          <div class="preview-list-item">
+            <div>
+              <div class="preview-list-title-text">Fourniture de véhicules 4x4 avec chauffeur</div>
+              <div class="preview-list-meta">Sous-traitant Tier 1 · Thiès · Clôture dans 18 jours</div>
+            </div>
+            <span class="badge badge-blue">Ouvert</span>
+          </div>
+
+          <div class="preview-list-title" style="margin-top: 24px;">Dernières demandes reçues</div>
+          <div class="preview-list-item">
+            <div>
+              <div class="preview-list-title-text">Demande de devis — Transport frigorifique</div>
+              <div class="preview-list-meta">Reçue il y a 2h · Via la plateforme</div>
+            </div>
+            <span class="badge badge-green">Nouveau</span>
+          </div>
+          <div class="preview-list-item">
+            <div>
+              <div class="preview-list-title-text">Appel à partenariat — Logistique chantier</div>
+              <div class="preview-list-meta">Reçue hier · Via la plateforme</div>
+            </div>
+            <span class="badge badge-blue">En cours</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">Tarifs</span>
+      <h2 class="section-title">Choisissez la visibilité<br>que vous méritez.</h2>
+      <p class="section-subtitle">Profil gratuit à vie · Sans engagement · Résiliable à tout moment</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-name">Basique</div>
+        <div class="price-desc">Pour tester la plateforme</div>
+        <div class="price-amount">0 <small>FCFA</small></div>
+        <div class="price-period">pour toujours</div>
+        <ul class="price-features">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Profil dans l'annuaire</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 3 mots-clés de compétences</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Accès à 3 appels d'offres/mois</li>
+          <li class="disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Badge vérifié</li>
+          <li class="disabled"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Mise en relation directe</li>
+        </ul>
+        <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20cr%C3%A9er%20mon%20profil%20Basique%20gratuit%20sur%20PétroleGaz%20Info." target="_blank" rel="noopener" class="btn btn-outline btn-block">Commencer</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="featured-badge">Recommandé</div>
+        <div class="price-name">Vérifié</div>
+        <div class="price-desc">Pour être visible et contacté</div>
+        <div class="price-amount">25 000 <small>FCFA</small></div>
+        <div class="price-period">par mois</div>
+        <ul class="price-features">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Tout Basique</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Badge « Vérifié »</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 10 mots-clés de compétences</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Appels d'offres illimités</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Mise en relation directe</li>
+        </ul>
+        <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20souscrire%20au%20plan%20V%C3%A9rifi%C3%A9%20(25%20000%20FCFA%2Fmois)%20de%20PétroleGaz%20Info." target="_blank" rel="noopener" class="btn btn-whatsapp btn-block">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Choisir Vérifié
+        </a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-name">Premium</div>
+        <div class="price-desc">Pour dominer votre secteur</div>
+        <div class="price-amount">60 000 <small>FCFA</small></div>
+        <div class="price-period">par mois</div>
+        <ul class="price-features">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Tout Vérifié</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Mise en avant en page d'accueil</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Alertes personnalisées par secteur</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Analyse mensuelle des opportunités</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Accompagnement dédié</li>
+        </ul>
+        <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20souscrire%20au%20plan%20Premium%20(60%20000%20FCFA%2Fmois)%20de%20PétroleGaz%20Info." target="_blank" rel="noopener" class="btn btn-outline btn-block">Choisir Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">FAQ</span>
+      <h2 class="section-title">Questions fréquentes</h2>
+      <p class="section-subtitle">Tout ce que vous devez savoir avant de vous inscrire.</p>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Comment la plateforme se différencie-t-elle du CNSCL ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Le CNSCL est l'organisme institutionnel qui publie officiellement les appels d'offres. Nous sommes une plateforme privée qui complète ce dispositif en offrant une expérience utilisateur moderne, un annuaire structuré et une mise en relation directe. Nous centralisons aussi les opportunités publiées par les sous-traitants de premier rang, qui ne figurent pas toujours sur le portail public.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Qui peut s'inscrire sur PétroleGaz Info ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Toute PME sénégalaise légalement constituée (NINEA, RCCM) et opérant dans un secteur pertinent : transport et logistique, sécurité, restauration collective, maintenance industrielle, BTP, ingénierie, environnement, formation et conseil. Nous vérifions chaque profil pour garantir la crédibilité de l'annuaire.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Comment se passe la vérification ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Après votre inscription, notre équipe vérifie votre NINEA, votre RCCM et vos certifications. Vous recevez le badge « Vérifié » sous 48h ouvrées. Ce badge rassure les donneurs d'ordre et augmente vos chances d'être contacté.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Puis-je payer par Wave ou Orange Money ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Oui, nous acceptons Wave, Orange Money, Free Money et carte bancaire via notre partenaire de paiement PayDunya. Le paiement est sécurisé et instantané.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Mes données sont-elles confidentielles ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Oui. Nous respectons la loi sénégalaise n° 2008-12 sur la protection des données personnelles. Vos informations sont chiffrées et seuls les donneurs d'ordre inscrits peuvent consulter votre fiche. Vous contrôlez les données que vous partagez.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Que se passe-t-il si je résilie ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Vous pouvez résilier à tout moment depuis votre tableau de bord. Votre profil reste visible en version Basique (gratuit) et vos données sont conservées. Aucune pénalité, aucun frais caché.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final" id="contact">
+  <div class="container">
+    <h2>Votre PME mérite d'être vue.</h2>
+    <p>Inscrivez-vous gratuitement et recevez vos premières opportunités dès cette semaine.</p>
+    <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME%20gratuitement%20sur%20PétroleGaz%20Info.%20Pouvez-vous%20m%27envoyer%20le%20formulaire%20d%27inscription%20%3F" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Inscrire ma PME gratuitement
+    </a>
+    <div class="cta-features">
+      <span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Profil gratuit à vie
+      </span>
+      <span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Vérification en 48h
+      </span>
+      <span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Sans engagement
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <span class="footer-brand-icon">🛢️</span>
+          PétroleGaz Info
+        </div>
+        <p class="footer-brand-desc">
+          La plateforme de référence du contenu local sénégalais. Nous connectons les PME aux opportunités du secteur pétrolier, gazier et minier.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Plateforme</h4>
+        <a href="#solution">Solution</a>
+        <a href="#how">Comment ça marche</a>
+        <a href="#preview">Aperçu</a>
+        <a href="#pricing">Tarifs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <a href="legal/mentions-legales.html">Mentions légales</a>
+        <a href="legal/cgu.html">CGU</a>
+        <a href="legal/cgv.html">CGV</a>
+        <a href="legal/confidentialite.html">Confidentialité</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="https://wa.me/221778001717" target="_blank" rel="noopener">WhatsApp : +221 77 800 17 17</a>
+        <a href="tel:+221778001717">+221 77 800 17 17</a>
+        <a href="#">Dakar, Sénégal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 PétroleGaz Info — Tous droits réservés. Dakar, Sénégal.
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20viens%20du%20site%20PétroleGaz%20Info.%20J%27aimerais%20en%20savoir%20plus." 
+   target="_blank" rel="noopener" 
+   class="whatsapp-float" 
+   aria-label="Contacter sur WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('mobile-open');
+  }
+
+  function toggleFaq(button) {
+    const item = button.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('navLinks').classList.remove('mobile-open');
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const firstFaq = document.querySelector('.faq-item');
+    if (firstFaq) firstFaq.classList.add('open');
+  });
+</script>
+
+</body>
+</html>
