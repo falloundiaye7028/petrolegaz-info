@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annuaire des PME — PétroleGaz Info</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #F8FAFC; color: #0F172A; }
+header { background: white; border-bottom: 1px solid #E2E8F0; padding: 16px 24px; position: sticky; top: 0; z-index: 100; }
+.nav { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 20px; font-weight: 800; color: #0B3D91; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { color: #64748B; text-decoration: none; font-size: 14px; font-weight: 500; }
+.nav-links a:hover { color: #0B3D91; }
+.btn-wa { background: #25D366; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; }
+.container { max-width: 1180px; margin: 0 auto; padding: 48px 24px; }
+h1 { font-size: 36px; margin-bottom: 12px; }
+.subtitle { color: #64748B; margin-bottom: 40px; font-size: 17px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+.filter { padding: 8px 16px; border-radius: 50px; background: white; border: 1px solid #E2E8F0; text-decoration: none; color: #64748B; font-size: 14px; font-weight: 500; transition: all 0.2s; cursor: pointer; }
+.filter:hover { border-color: #0B3D91; color: #0B3D91; }
+.filter.active { background: #0B3D91; color: white; border-color: #0B3D91; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+.card { background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 24px; transition: all 0.3s; display: flex; flex-direction: column; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: #0B3D91; }
+.card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; gap: 12px; }
+.card h3 { font-size: 17px; color: #0F172A; }
+.badge { background: #DCFCE7; color: #166534; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.card-meta { font-size: 13px; color: #64748B; margin-bottom: 12px; }
+.card-desc { font-size: 14px; color: #334155; margin-bottom: 16px; line-height: 1.5; flex: 1; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.tag { background: #E6EEFB; color: #0B3D91; font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: 500; }
+.contact-btn { display: block; text-align: center; background: #25D366; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+.contact-btn:hover { background: #1EBE5D; }
+.empty { text-align: center; padding: 80px 24px; color: #64748B; }
+.cta-section { background: #0B3D91; color: white; padding: 64px 24px; text-align: center; margin-top: 64px; }
+.cta-section h2 { font-size: 32px; margin-bottom: 16px; }
+.cta-section p { font-size: 17px; opacity: 0.9; margin-bottom: 32px; }
+.cta-btn { background: #25D366; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; }
+@media (max-width: 640px) { .nav-links a:not(.btn-wa) { display: none; } h1 { font-size: 26px; } .container { padding: 32px 20px; } }
+</style>
+</head>
+<body>
+<header>
+<div class="nav">
+<a href="index.html" class="logo">🛢️ PétroleGaz Info</a>
+<div class="nav-links">
+<a href="annuaire.html">Annuaire</a>
+<a href="appels-offres.html">Appels d'offres</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME." target="_blank" class="btn-wa">Inscrire ma PME</a>
+</div>
+</div>
+</header>
+
+<div class="container">
+<h1>Annuaire des PME vérifiées</h1>
+<p class="subtitle">Découvrez les entreprises sénégalaises prêtes à intervenir dans le secteur pétrolier et gazier.</p>
+
+<div class="filters" id="filters">
+<div class="filter active" data-secteur="">Tous</div>
+<div class="filter" data-secteur="Transport">Transport</div>
+<div class="filter" data-secteur="Sécurité">Sécurité</div>
+<div class="filter" data-secteur="Restauration">Restauration</div>
+<div class="filter" data-secteur="Maintenance">Maintenance</div>
+<div class="filter" data-secteur="BTP">BTP</div>
+<div class="filter" data-secteur="Ingénierie">Ingénierie</div>
+<div class="filter" data-secteur="Formation">Formation</div>
+</div>
+
+<div class="grid" id="grid"></div>
+</div>
+
+<section class="cta-section">
+<h2>Votre PME n'est pas encore inscrite ?</h2>
+<p>Rejoignez l'annuaire et soyez visible auprès des donneurs d'ordre.</p>
+<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME%20gratuitement." target="_blank" class="cta-btn">Inscrire ma PME gratuitement →</a>
+</section>
+
+<script>
+const pmes = [
+  { nom: "Diallo & Fils SARL", secteur: "Transport", localisation: "Dakar", description: "Spécialiste du transport routier de matériel industriel et logistique de chantier. Flotte de 15 camions et 8 véhicules 4x4.", competences: ["Transport routier", "Logistique", "HSE"], verifie: true },
+  { nom: "Teranga Sécurité", secteur: "Sécurité", localisation: "Thiès", description: "Société de sécurité privée agréée. Gardiennage de sites industriels et pétroliers. 120 agents formés.", competences: ["Sécurité industrielle", "HSE"], verifie: true },
+  { nom: "Sahel Restauration", secteur: "Restauration", localisation: "Saint-Louis", description: "Restauration collective pour bases-vie et chantiers. Capacité 500 repas/jour. Certification HACCP.", competences: ["Restauration collective"], verifie: true },
+  { nom: "Sénégal Maintenance Industrielle", secteur: "Maintenance", localisation: "Dakar", description: "Maintenance électromécanique, soudure, tuyauterie. Intervention sur sites pétroliers et gaziers.", competences: ["Maintenance industrielle", "Soudure", "Électricité"], verifie: true },
+  { nom: "Baobab BTP", secteur: "BTP", localisation: "Mbour", description: "Construction de bases-vie, génie civil, VRD. Références sur sites industriels.", competences: ["BTP", "Génie civil"], verifie: true },
+  { nom: "Atlantique Ingénierie", secteur: "Ingénierie", localisation: "Dakar", description: "Bureau d'études techniques. Ingénierie pétrolière, environnementale et HSE.", competences: ["Ingénierie", "HSE", "Environnement"], verifie: true },
+  { nom: "Formation Pro Sénégal", secteur: "Formation", localisation: "Dakar", description: "Centre de formation professionnelle. Formations HSE, sécurité industrielle et techniques pétrolières.", competences: ["Formation", "HSE"], verifie: true },
+  { nom: "Logistique Atlantique", secteur: "Transport", localisation: "Dakar", description: "Logistique portuaire et transport de conteneurs. Partenaire des principaux ports sénégalais.", competences: ["Logistique", "Transport routier"], verifie: true },
+];
+
+function render(secteur = "") {
+  const grid = document.getElementById('grid');
+  const filtered = secteur ? pmes.filter(p => p.secteur === secteur) : pmes;
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty"><p>Aucune PME dans cette catégorie pour le moment.</p></div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(p => `
+    <div class="card">
+      <div class="card-header">
+        <h3>${p.nom}</h3>
+        ${p.verifie ? '<span class="badge">✓ Vérifié</span>' : ''}
+      </div>
+      <div class="card-meta">📍 ${p.localisation} · 🏢 ${p.secteur}</div>
+      <p class="card-desc">${p.description}</p>
+      <div class="tags">${p.competences.map(c => `<span class="tag">${c}</span>`).join('')}</div>
+      <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20contacter%20${encodeURIComponent(p.nom)}" target="_blank" class="contact-btn">Contacter cette PME</a>
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('.filter').forEach(f => {
+  f.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(x => x.classList.remove('active'));
+    f.classList.add('active');
+    render(f.dataset.secteur);
+  });
+});
+
+render();
+</script>
+</body>
+</html>
