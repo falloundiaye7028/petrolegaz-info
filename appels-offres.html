@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appels d'offres — PétroleGaz Info</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #F8FAFC; color: #0F172A; }
+header { background: white; border-bottom: 1px solid #E2E8F0; padding: 16px 24px; position: sticky; top: 0; z-index: 100; }
+.nav { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 20px; font-weight: 800; color: #0B3D91; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { color: #64748B; text-decoration: none; font-size: 14px; font-weight: 500; }
+.nav-links a:hover { color: #0B3D91; }
+.btn-wa { background: #25D366; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; }
+.container { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+h1 { font-size: 36px; margin-bottom: 12px; }
+.subtitle { color: #64748B; margin-bottom: 40px; font-size: 17px; }
+.ao-list { display: flex; flex-direction: column; gap: 16px; }
+.ao { background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 24px; transition: all 0.3s; }
+.ao:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: #0B3D91; }
+.ao-header { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 12px; }
+.ao h3 { font-size: 18px; color: #0F172A; }
+.ao-badge { padding: 6px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.ao-badge.urgent { background: #FEE2E2; color: #991B1B; }
+.ao-badge.normal { background: #FEF3C7; color: #92400E; }
+.ao-badge.new { background: #DCFCE7; color: #166534; }
+.ao p { color: #334155; font-size: 14px; margin-bottom: 16px; line-height: 1.6; }
+.ao-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #64748B; margin-bottom: 16px; }
+.btn-primary { display: inline-block; background: #0B3D91; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; }
+.btn-primary:hover { background: #062A66; }
+.empty { text-align: center; padding: 80px 24px; color: #64748B; background: white; border-radius: 12px; }
+@media (max-width: 640px) { .nav-links a:not(.btn-wa) { display: none; } h1 { font-size: 26px; } .container { padding: 32px 20px; } .ao-header { flex-direction: column; } }
+</style>
+</head>
+<body>
+<header>
+<div class="nav">
+<a href="index.html" class="logo">🛢️ PétroleGaz Info</a>
+<div class="nav-links">
+<a href="annuaire.html">Annuaire</a>
+<a href="appels-offres.html">Appels d'offres</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20inscrire%20ma%20PME." target="_blank" class="btn-wa">Inscrire ma PME</a>
+</div>
+</div>
+</header>
+
+<div class="container">
+<h1>Appels d'offres</h1>
+<p class="subtitle">Toutes les opportunités du secteur pétrolier, gazier et minier au Sénégal.</p>
+<div class="ao-list" id="ao-list"></div>
+</div>
+
+<script>
+const aos = [
+  { titre: "Transport de matériel vers le site GTA", description: "BP recherche un prestataire pour le transport de matériel industriel vers le site Grand Tortue Ahmeyim. 15 camions requis, 6 mois de contrat.", donneur: "BP Sénégal", localisation: "Saint-Louis", cloture: "2026-01-28" },
+  { titre: "Services de restauration collective — 150 personnes", description: "Woodside recherche un prestataire de restauration collective pour une base-vie de 150 personnes. Contrat 12 mois renouvelable.", donneur: "Woodside", localisation: "Dakar", cloture: "2026-02-02" },
+  { titre: "Maintenance électromécanique — terminal pétrolier", description: "PETROSEN recherche un prestataire pour la maintenance électromécanique de son terminal pétrolier de Dakar. Contrat 24 mois.", donneur: "PETROSEN", localisation: "Dakar", cloture: "2026-02-15" },
+  { titre: "Fourniture d'EPI et équipements de sécurité", description: "Un sous-traitant de premier rang recherche un fournisseur d'équipements de protection individuelle et de sécurité pour ses équipes.", donneur: "Sous-traitant Tier 1", localisation: "Thiès", cloture: "2026-02-20" },
+  { titre: "Logistique de personnel — 200 rotations/mois", description: "Woodside recherche un prestataire pour la logistique de son personnel : 200 rotations mensuelles entre Dakar et Saint-Louis.", donneur: "Woodside", localisation: "Dakar", cloture: "2026-02-10" },
+  { titre: "Étude d'impact environnemental — bloc offshore", description: "Une compagnie pétrolière recherche un bureau d'études pour la réalisation d'une étude d'impact environnemental sur un bloc offshore.", donneur: "Compagnie internationale", localisation: "Dakar", cloture: "2026-02-25" },
+];
+
+function formatDate(d) { return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
+function joursRestants(d) { return Math.ceil((new Date(d) - new Date()) / (1000 * 60 * 60 * 24)); }
+
+document.getElementById('ao-list').innerHTML = aos.map(ao => {
+  const jours = joursRestants(ao.cloture);
+  const cls = jours <= 7 ? 'urgent' : (jours <= 15 ? 'normal' : 'new');
+  const badge = jours <= 0 ? 'Clôturé' : `J-${jours}`;
+  return `
+    <div class="ao">
+      <div class="ao-header">
+        <h3>${ao.titre}</h3>
+        <span class="ao-badge ${cls}">${badge}</span>
+      </div>
+      <p>${ao.description}</p>
+      <div class="ao-meta">
+        <span>🏢 ${ao.donneur}</span>
+        <span>📍 ${ao.localisation}</span>
+        <span>📅 Clôture : ${formatDate(ao.cloture)}</span>
+      </div>
+      <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20l%27appel%20d%27offres%20%3A%20${encodeURIComponent(ao.titre)}" target="_blank" class="btn-primary">Je suis intéressé →</a>
+    </div>
+  `;
+}).join('');
+</script>
+</body>
+</html>
