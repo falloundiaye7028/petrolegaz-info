@@ -11,7 +11,7 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #F8FAFC; color: #0F172A; }
-.layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 61px); }
 .sidebar { background: white; border-right: 1px solid #E2E8F0; padding: 24px 16px; }
 .logo { margin-bottom: 32px; display: flex; align-items: center; text-decoration: none; }
 .logo img { display:block; width:210px; height:auto; }
@@ -39,9 +39,28 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-s
 .tag-green { background: #DCFCE7; color: #166534; }
 .tag-blue { background: #DBEAFE; color: #1E40AF; }
 @media (max-width: 768px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } .main { padding: 20px; } .kpis { grid-template-columns: 1fr; } }
+
+.menu-toggle { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: #0F172A; }
+@media (max-width: 640px) {
+  .top-nav-links { display: none !important; }
+  .top-nav-links.mobile-open { display: flex !important; flex-direction: column; position: absolute; top: calc(100% + 14px); left: 0; right: 0; background: white; padding: 20px; border-bottom: 1px solid #E2E8F0; gap: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.05); z-index: 99; }
+  .menu-toggle { display: block; }
+}
 </style>
 </head>
 <body>
+<header style="background:white;border-bottom:1px solid #E2E8F0;padding:14px 24px;position:sticky;top:0;z-index:100;">
+  <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;position:relative;">
+    <a href="index.html" style="font-size:18px;font-weight:800;color:#0B3D91;text-decoration:none;display:flex;align-items:center;gap:8px;">🛢️ PétroleGaz Info</a>
+    <nav class="top-nav-links" id="navLinks" style="display:flex;gap:20px;align-items:center;">
+      <a href="annuaire.html" style="color:#64748B;text-decoration:none;font-size:14px;font-weight:500;">Annuaire</a>
+      <a href="appels-offres.html" style="color:#64748B;text-decoration:none;font-size:14px;font-weight:500;">Opportunités</a>
+      <a href="enterprise.html" style="color:#64748B;text-decoration:none;font-size:14px;font-weight:500;">Enterprise</a>
+      <a href="inscription.html" style="background:#0B3D91;color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;">Inscrire ma PME</a>
+    </nav>
+    <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
+  </div>
+</header>
 <div class="layout">
 <aside class="sidebar">
 <a href="/" class="logo" aria-label="PétroleGaz — Accueil"><img src="assets/petrolegaz-logo.png" alt="PétroleGaz — Contenu local Sénégal"></a>
@@ -124,5 +143,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-s
 </div>
 </main>
 </div>
+<script>
+function toggleMenu() {
+  const nav = document.getElementById('navLinks');
+  const button = document.querySelector('.menu-toggle');
+  const isOpen = nav.classList.toggle('mobile-open');
+  button.setAttribute('aria-expanded', String(isOpen));
+}
+</script>
 </body>
 </html>
