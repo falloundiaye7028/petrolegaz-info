@@ -1,5 +1,5 @@
 // Fonction serverless Vercel : expose uniquement les informations publiques
-// des PME vérifiées. Le jeton Airtable reste exclusivement côté serveur.
+// des entreprises actives, vérifiées ou encore à compléter. Le jeton Airtable reste côté serveur.
 
 const BASE_ID = 'appCQuqklwVbrz7XF';
 const TABLE_NAME = 'PME';
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     do {
       const params = new URLSearchParams({
-        filterByFormula: "{Statut}='Vérifié'",
+        filterByFormula: "OR({Statut}='Gratuit',{Statut}='Vérifié',{Statut}='Premium')",
         'sort[0][field]': 'Nom entreprise',
         'sort[0][direction]': 'asc',
         pageSize: '100',
