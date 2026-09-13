@@ -31,6 +31,11 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 .badge { background: #DCFCE7; color: #166534; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .badge-pending { background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .directory-note { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E3A8A; border-radius: 12px; padding: 16px 18px; margin: -20px 0 28px; font-size: 14px; line-height: 1.55; }
+.ad-banner { margin:0 0 30px; border-radius:14px; padding:22px 24px; display:flex; justify-content:space-between; align-items:center; gap:20px; color:white; background:linear-gradient(120deg,#0A1628,#0B3D91); border-left:5px solid #F4C430; }
+.ad-label { font-size:10px; letter-spacing:1.3px; text-transform:uppercase; opacity:.7; }
+.ad-banner h2 { font-size:19px; margin:5px 0; }
+.ad-banner p { font-size:13px; opacity:.82; }
+.ad-btn { color:#0A1628; background:#F4C430; padding:11px 16px; border-radius:8px; text-decoration:none; font-size:13px; font-weight:800; white-space:nowrap; }
 .card-meta { font-size: 13px; color: #64748B; margin-bottom: 12px; }
 .card-desc { font-size: 14px; color: #334155; margin-bottom: 16px; line-height: 1.5; flex: 1; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
@@ -42,7 +47,7 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 .cta-section h2 { font-size: 32px; margin-bottom: 16px; }
 .cta-section p { font-size: 17px; opacity: 0.9; margin-bottom: 32px; }
 .cta-btn { background: #25D366; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; }
-@media (max-width: 640px) { .nav-links a:not(.btn-wa) { display: none; } h1 { font-size: 26px; } .container { padding: 32px 20px; } }
+@media (max-width: 640px) { .nav-links a:not(.btn-wa) { display: none; } h1 { font-size: 26px; } .container { padding: 32px 20px; } .ad-banner{align-items:flex-start;flex-direction:column}.ad-btn{width:100%;text-align:center} }
 </style>
 </head>
 <body>
@@ -62,6 +67,10 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 <h1>Annuaire des entreprises</h1>
 <p class="subtitle">Découvrez les prestataires sénégalais pouvant contribuer aux projets pétroliers, gaziers et industriels.</p>
 <div class="directory-note"><strong>Information importante :</strong> les fiches marquées « Profil à compléter » sont établies à partir d’informations publiques et n’ont pas encore été revendiquées par l’entreprise concernée.</div>
+<aside class="ad-banner" aria-label="Publicité">
+  <div><span class="ad-label">Publicité · Démonstration</span><h2>Fournisseur minier ? Faites connaître votre expertise.</h2><p>Un emplacement premium au cœur de l'annuaire des entreprises.</p></div>
+  <a class="ad-btn" href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20r%C3%A9server%20une%20publicit%C3%A9%20dans%20l%27annuaire%20P%C3%A9troleGaz." target="_blank" rel="noopener">Votre publicité ici →</a>
+</aside>
 
 <div class="filters" id="filters">
 <div class="filter active" data-secteur="">Tous</div>
