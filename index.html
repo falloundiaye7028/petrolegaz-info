@@ -570,6 +570,7 @@
     .whatsapp-float { bottom: 16px; right: 16px; width: 54px; height: 54px; }
   }
 </style>
+<link rel="stylesheet" href="assets/nav-mobile.css">
 </head>
 <body>
 
@@ -591,7 +592,7 @@
           Inscrire ma PME
         </a>
       </div>
-      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+      <button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button>
     </nav>
   </div>
 </header>
@@ -1122,7 +1123,10 @@
 
 <script>
   function toggleMenu() {
-    document.getElementById('navLinks').classList.toggle('mobile-open');
+    const nav = document.getElementById('navLinks');
+    const button = document.querySelector('.menu-toggle');
+    const isOpen = nav.classList.toggle('mobile-open');
+    button.setAttribute('aria-expanded', String(isOpen));
   }
 
   function toggleFaq(button) {
@@ -1149,5 +1153,6 @@
   });
 </script>
 
+<script src="assets/nav-mobile.js"></script>
 </body>
 </html>
