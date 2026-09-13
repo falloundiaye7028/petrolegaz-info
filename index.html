@@ -9,7 +9,7 @@
 <meta property="og:title" content="PétroleGaz Info — Votre PME mérite sa part du pétrole sénégalais">
 <meta property="og:description" content="La plateforme qui connecte les PME sénégalaises aux donneurs d'ordre du secteur pétrolier, gazier et minier.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢️</text></svg>">
+<link rel="icon" type="image/png" href="assets/petrolegaz-icon.png">
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,19 +50,9 @@
   }
   .nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
   .logo {
-    font-size: 22px; font-weight: 800; color: var(--brand);
-    text-decoration: none; display: flex; align-items: center; gap: 10px;
+    text-decoration: none; display: flex; align-items: center;
   }
-  .logo-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-    border-radius: 8px; display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 20px;
-  }
-  .logo-text small {
-    display: block; font-size: 10px; color: var(--text-muted);
-    font-weight: 500; text-transform: uppercase; letter-spacing: 1px;
-  }
+  .logo img { display: block; width: 210px; height: auto; }
   .nav-links { display: flex; gap: 32px; align-items: center; }
   .nav-links a {
     color: var(--text-muted); text-decoration: none;
@@ -571,12 +561,8 @@
 <header>
   <div class="container">
     <nav class="nav">
-      <a href="#" class="logo">
-        <span class="logo-icon">🛢️</span>
-        <span class="logo-text">
-          PétroleGaz Info
-          <small>Contenu local Sénégal</small>
-        </span>
+      <a href="index.html" class="logo" aria-label="PétroleGaz — Accueil">
+        <img src="assets/petrolegaz-logo.png" alt="PétroleGaz — Contenu local Sénégal">
       </a>
       <div class="nav-links" id="navLinks">
         <a href="#solution">Solution</a>
@@ -1058,10 +1044,7 @@
   <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">
-          <span class="footer-brand-icon">🛢️</span>
-          PétroleGaz Info
-        </div>
+        <div class="footer-brand"><img src="assets/petrolegaz-logo.png" alt="PétroleGaz" style="width:210px;height:auto;background:white;border-radius:8px;padding:4px"></div>
         <p class="footer-brand-desc">
           La plateforme de référence du contenu local sénégalais. Nous connectons les PME aux opportunités du secteur pétrolier, gazier et minier.
         </p>
