@@ -27,6 +27,8 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; gap: 12px; }
 .card h3 { font-size: 17px; color: #0F172A; }
 .badge { background: #DCFCE7; color: #166534; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.badge-pending { background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.directory-note { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E3A8A; border-radius: 12px; padding: 16px 18px; margin: -20px 0 28px; font-size: 14px; line-height: 1.55; }
 .card-meta { font-size: 13px; color: #64748B; margin-bottom: 12px; }
 .card-desc { font-size: 14px; color: #334155; margin-bottom: 16px; line-height: 1.5; flex: 1; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
@@ -55,8 +57,9 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 </header>
 
 <div class="container">
-<h1>Annuaire des PME vérifiées</h1>
-<p class="subtitle">Découvrez les entreprises sénégalaises prêtes à intervenir dans le secteur pétrolier et gazier.</p>
+<h1>Annuaire des entreprises</h1>
+<p class="subtitle">Découvrez les prestataires sénégalais pouvant contribuer aux projets pétroliers, gaziers et industriels.</p>
+<div class="directory-note"><strong>Information importante :</strong> les fiches marquées « Profil à compléter » sont établies à partir d’informations publiques et n’ont pas encore été revendiquées par l’entreprise concernée.</div>
 
 <div class="filters" id="filters">
 <div class="filter active" data-secteur="">Tous</div>
@@ -103,12 +106,15 @@ function render(secteur = "") {
     <div class="card">
       <div class="card-header">
         <h3>${escapeHtml(p.nom)}</h3>
-        ${p.verifie ? '<span class="badge">✓ Vérifié</span>' : ''}
+        ${p.verifie ? '<span class="badge">✓ Vérifié</span>' : '<span class="badge-pending">Profil à compléter</span>'}
       </div>
       <div class="card-meta">📍 ${escapeHtml(p.localisation)} · 🏢 ${escapeHtml(p.secteur)}</div>
       <p class="card-desc">${escapeHtml(p.description)}</p>
       <div class="tags">${p.competences.slice(0, 5).map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('')}</div>
-      <a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20contacter%20${encodeURIComponent(p.nom)}" target="_blank" class="contact-btn">Contacter cette PME</a>
+      ${p.verifie
+        ? `<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20contacter%20${encodeURIComponent(p.nom)}" target="_blank" rel="noopener" class="contact-btn">Contacter cette PME</a>`
+        : `<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20représente%20${encodeURIComponent(p.nom)}%20et%20je%20souhaite%20revendiquer%20et%20compléter%20cette%20fiche." target="_blank" rel="noopener" class="contact-btn">Revendiquer et compléter cette fiche</a>`
+      }
     </div>
   `).join('');
 }
