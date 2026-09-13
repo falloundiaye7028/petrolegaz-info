@@ -47,12 +47,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-s
   .menu-toggle { display: block; }
 }
 </style>
+<link rel="stylesheet" href="assets/nav-mobile.css">
 </head>
 <body>
 <header style="background:white;border-bottom:1px solid #E2E8F0;padding:14px 24px;position:sticky;top:0;z-index:100;">
   <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;position:relative;">
     <a href="index.html" style="font-size:18px;font-weight:800;color:#0B3D91;text-decoration:none;display:flex;align-items:center;gap:8px;">🛢️ PétroleGaz Info</a>
-    <nav class="top-nav-links" id="navLinks" style="display:flex;gap:20px;align-items:center;">
+    <nav class="top-nav-links nav-links" id="navLinks" style="display:flex;gap:20px;align-items:center;">
       <a href="annuaire.html" style="color:#64748B;text-decoration:none;font-size:14px;font-weight:500;">Annuaire</a>
       <a href="appels-offres.html" style="color:#64748B;text-decoration:none;font-size:14px;font-weight:500;">Opportunités</a>
       <a href="enterprise.html" style="color:#64748B;text-decoration:none;font-size:14px;font-weight:500;">Enterprise</a>
@@ -151,5 +152,6 @@ function toggleMenu() {
   button.setAttribute('aria-expanded', String(isOpen));
 }
 </script>
+<script src="assets/nav-mobile.js"></script>
 </body>
 </html>
