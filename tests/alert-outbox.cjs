@@ -9,7 +9,7 @@ const { PGlite } = require(process.env.PGLITE_MODULE || '@electric-sql/pglite');
     create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
     grant usage on schema auth to anon,authenticated;
     insert into auth.users values('${uid}','${recipient}',now());`);
-  for (const migration of ['20260914_pme_private.sql', '20260915_alert_preferences.sql', '20260916_alert_outbox.sql']) {
+  for (const migration of ['20260914_pme_private.sql', '20260915_alert_preferences.sql', '20260916_alert_outbox.sql', '20260917_alert_dispatch.sql']) {
     await db.exec(fs.readFileSync(path.join(__dirname, '../supabase/migrations', migration), 'utf8'));
   }
   async function admin(sql, params = []) { await db.exec('reset role'); return db.query(sql, params); }
@@ -33,11 +33,19 @@ const { PGlite } = require(process.env.PGLITE_MODULE || '@electric-sql/pglite');
   assert.equal(await enqueue(), null, 'consent alone must not activate delivery');
   await approve();
   const first = await enqueue(); assert.ok(first);
+  const dispatchContext = (await service('select pme_alert_dispatch_context($1) data', [uid])).rows[0].data;
+  assert.equal(dispatchContext.approved, true); assert.equal(dispatchContext.recipient, recipient);
+  assert.equal(dispatchContext.jobs[0].id, first);
+  assert.equal((await service("select pme_dispatch_alert($1,$2,$3,$4,$5,$6,now()+interval '1 day',70) ok",
+    [first, uid, recipient, hash, dispatchContext.preferences.consent_at, ['rec99999999999999']])).rows[0].ok, false, 'fresh qualifying PME must still be authorized');
+  // Above rejection cancels the job; use a fresh job for the remaining tests.
+  const active = await enqueue();
   assert.equal((await service("select pme_enqueue_alert($1,'rec00000000000102',$2,now()+interval '30 days',70) id", [uid, [pme]])).rows[0].id, null, 'duplicate excluded');
-  assert.equal(await authorize(first), true);
-  assert.equal(await authorize(first), false, 'same job cannot be attempted twice');
-  await service('select pme_finish_alert($1,null)', [first]);
-  assert.equal(await authorize(first), false, 'uncertain result cannot be retried');
+  assert.equal((await service("select pme_dispatch_alert($1,$2,$3,$4,$5,$6,now()+interval '1 day',70) ok",
+    [active, uid, recipient, hash, dispatchContext.preferences.consent_at, [pme]])).rows[0].ok, true);
+  assert.equal(await authorize(active), false, 'same job cannot be attempted twice');
+  await service('select pme_finish_alert($1,null)', [active]);
+  assert.equal(await authorize(active), false, 'uncertain result cannot be retried');
   const delayed = await enqueue(); assert.ok(delayed);
   assert.equal(await authorize(delayed), false, 'weekly cadence enforced across jobs');
   await admin("update pme_alert_delivery_approvals set last_attempt_at=now()-interval '8 days'");
@@ -88,6 +96,7 @@ const { PGlite } = require(process.env.PGLITE_MODULE || '@electric-sql/pglite');
     }
     await assert.rejects(() => db.query('select pme_authorize_alert($1,$2,$3)', [first, recipient, hash]), /permission denied/);
     await assert.rejects(() => db.query('select pme_unsubscribe_alert_user($1)', [uid]), /permission denied/);
+    await assert.rejects(() => db.query('select pme_alert_dispatch_context($1)', [uid]), /permission denied/);
   }
   await assert.rejects(() => service("update pme_alert_outbox set state='queued'"), /permission denied/);
   await db.close();

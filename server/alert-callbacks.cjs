@@ -7,7 +7,9 @@ async function rpc(name, data, env, fetchImpl) {
   // Never accept a URL, key, function name or user id from the HTTP caller.
   const response = await fetchImpl(`${PROJECT}/rest/v1/rpc/${name}`, {
     method: 'POST', redirect: 'error', signal: AbortSignal.timeout(8000),
-    headers: { apikey: env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`, 'Content-Type': 'application/json' },
+    headers: { apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+      ...(env.SUPABASE_SERVICE_ROLE_KEY.startsWith('sb_secret_') ? {} : { Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}` }),
+      'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
   if (!response.ok) throw new Error('Storage unavailable');

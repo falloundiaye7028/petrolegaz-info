@@ -27,9 +27,18 @@ Le domaine retenu est `send.petrolegaz.com`, avec l’expéditeur proposé `aler
 - `api/resend-webhook` : vérification du corps brut avec Svix **2.5.0**, signature et horodatage avant toute écriture. Échec du stockage → 503, jamais de faux accusé de réception. Seuls les identifiants/types utiles sont conservés, pas le corps complet contenant des données personnelles.
 - `supabase/migrations/20260916_alert_outbox.sql` : file privée, unicité compte/opportunité, autorisation atomique à usage unique, fréquence quotidienne/hebdomadaire, recontrôle du consentement, de l’adresse confirmée, du rattachement et de l’échéance. Toute modification de consentement annule la file et retire l’approbation d’envoi. Rebonds/plaintes/suppressions bloquent la suite ; un événement de livraison tardif ne lève jamais ce blocage. Les événements précoces sont rapprochés après stockage de l’identifiant Resend.
 
-**Limites explicites :** migration non appliquée en production par ce lot ; tables d’approbation initialement vides ; aucun nouveau compte inscrit aux envois ; aucun coordinateur catalogue → file → transport, cron ou API publique d’envoi livré. Les callbacks sont fermés par défaut. Le transport n’est appelé par aucune route existante. La file réserve une seule opportunité par compte/message ; un digest multi-opportunités nécessite une table de réservation par élément. Les anciens abonnements de préparation ne constituent pas une activation d’envoi.
+**Limites explicites :** migrations serveur non appliquées en production par ce lot ; tables d’approbation initialement vides ; aucun nouveau compte inscrit aux envois ; aucun cron ni API publique d’envoi. Le coordinateur manuel décrit ci-dessous est livré, mais non exécuté avec des secrets réels. Les callbacks sont fermés par défaut. Le transport n’est appelé par aucune route existante. La file réserve une seule opportunité par compte/message ; un digest multi-opportunités nécessite une table de réservation par élément. Les anciens abonnements de préparation ne constituent pas une activation d’envoi.
 
-La politique conservatrice est « au plus une tentative » : un processus interrompu peut laisser un message `attempting` ou `unknown`, jamais remis automatiquement en file. L’historique ne doit pas être effacé pour relancer : cela détruirait la protection anti-doublon. Une révocation après le contrôle final ne peut pas rappeler un email déjà en cours d’envoi chez Resend. Une vérification fraîche du catalogue et de l’adéquation au score reste à réaliser dans le coordinateur avant l’autorisation SQL ; la base ne possède pas le catalogue Airtable.
+La politique conservatrice est « au plus une tentative » : un processus interrompu peut laisser un message `attempting` ou `unknown`, jamais remis automatiquement en file. L’historique ne doit pas être effacé pour relancer : cela détruirait la protection anti-doublon. Une révocation après le contrôle final ne peut pas rappeler un email déjà en cours d’envoi chez Resend. Le coordinateur relit directement Airtable et les autorisations avant l’autorisation SQL ; la base ne possède pas le catalogue Airtable. Les données Airtable et Postgres ne partagent pas une transaction : une modification de catalogue après la dernière lecture reste possible.
+
+### Déclencheur manuel interne
+
+- `server/alert-dispatch.cjs` relie le rapprochement, la réservation durable, le modèle, le contrôle final et le transport. Une invocation traite au plus une opportunité pour un seul compte configuré. Un compte sans approbation séparée, désabonné, non vérifié, bloqué ou hors fréquence ne reçoit rien.
+- `server/alert-sources.cjs` lit les champs utiles directement depuis Airtable (sans cache CDN, pagination bornée, pas de données partielles) et appelle les RPC serveur. Aucun URL externe ou destinataire arbitraire accepté par un endpoint public. Les identifiants de base et de projet sont fixes : ne pas l’exécuter contre une base de recette sans adapter explicitement les sources.
+- `supabase/migrations/20260917_alert_dispatch.sql` doit être appliquée **après** `20260916_alert_outbox.sql`. Elle fournit la lecture privée du contexte et une réservation contrôlant les PME réellement qualifiées dans le nouveau calcul. Ne pas rejouer les migrations précédentes déjà appliquées.
+- Simulation : `node scripts/run-alerts.cjs`. Ne modifie aucune ligne et n’envoie rien. Les secrets/paramètres sont injectés dans l’environnement du processus, pas dans la commande ni dans le dépôt. La console affiche seulement un état et, en simulation, un nombre de correspondances.
+- Recette réelle **uniquement après validation** : `node scripts/run-alerts.cjs --send`. Requiert simultanément les trois indicateurs à `true`, les secrets et l’approbation du compte courant. `--send` seul ne suffit pas. Ne pas lancer cette commande simplement pour vérifier l’installation.
+- Un échec de stockage après réponse de Resend retourne `reconciliation_required` : vérifier le journal fournisseur et la file, sans relancer le message. L’historique est plafonné à 10 000 entrées par compte avant arrêt et revue opérateur, jamais tronqué silencieusement. Les anciennes réservations annulées ne sont pas réactivées automatiquement.
 
 ### Paramètres à connecter avant recette (secrets serveur uniquement)
 
@@ -43,15 +52,17 @@ La politique conservatrice est « au plus une tentative » : un processus interr
 | `PME_ALERT_CALLBACKS_READY` | `false` tant que désabonnement et webhook ne sont pas validés sur le déploiement réel. |
 | `PME_ALERT_EMAIL_ENABLED` | `false` ; ne pas activer avant la recette interne et le coordinateur. |
 | `PME_ALERT_INTERNAL_RECIPIENT` | Adresse interne exacte explicitement autorisée pour la recette ; aucune liste ni destinataire fourni par une requête publique. |
+| `PME_ALERT_INTERNAL_USER_ID` | UUID Supabase du même compte de recette ; aucun accès ajouté automatiquement. |
+| `AIRTABLE_TOKEN` | Jeton serveur de lecture du catalogue, déjà utilisé par les API publiques ; ne pas l’exposer au client. |
 
-Ne pas copier les secrets de production dans des previews partagées. Tester d’abord avec une base de recette et une adresse consentante. Avant tout envoi : revue/appliquer la migration une fois, connecter les secrets dans Vercel, valider les callbacks avec Resend, construire/tester le coordinateur, vérifier quotas et rétention puis approuver séparément le consentement courant du seul compte interne. Il n’existe pas de script d’approbation globale. Ne pas réattribuer une PME réelle pour la recette.
+Ne pas copier les secrets de production dans des previews partagées. Les tests automatisés utilisent une base isolée et des appels HTTP simulés. Avant tout envoi réel : revue/appliquer les nouvelles migrations une fois dans l’ordre, connecter les secrets dans Vercel et dans le processus opérateur, valider les callbacks avec Resend, valider une simulation connectée du coordinateur, vérifier quotas et rétention puis approuver séparément le consentement courant du seul compte interne. Il n’existe pas de script d’approbation globale. Ne pas réattribuer une PME réelle pour la recette.
 
 Références de conception : [idempotence Resend, fenêtre de 24 heures](https://resend.com/docs/dashboard/emails/idempotency-keys), [vérification des webhooks](https://resend.com/docs/webhooks/verify-webhooks-requests), [API d’envoi](https://resend.com/docs/api-reference/emails/send-email).
 
 ## Avant tout envoi réel (validation opérationnelle restante)
 
 - Choisir/valider le prestataire, l’expéditeur et le domaine (SPF/DKIM/DMARC), les quotas et la facturation. Ne pas réutiliser le SMTP d’authentification pour une campagne sans validation.
-- Relier le coordinateur à la file et au transport préparés ; ne jamais marquer un message envoyé avant confirmation du prestataire.
+- Valider le coordinateur manuel avec les sources réelles ; ne jamais confondre acceptation Resend et livraison.
 - Recontrôler consentement, adresse vérifiée, rattachement et échéance **au moment de l’envoi**, y compris après une révocation concurrente ; annuler les messages en attente après désabonnement.
 - Valider sur Vercel les callbacks préparés (corps brut reçu intact), connecter le webhook Resend, vérifier l’arrêt d’urgence et organiser la surveillance des résultats incertains.
 - Valider les mentions de confidentialité, la rétention et le consentement de réception réelle après la phase de préparation. Ne pas importer d’abonnés ni activer automatiquement les comptes existants.
@@ -64,6 +75,8 @@ Références de conception : [idempotence Resend, fenêtre de 24 heures](https:/
 `PGLITE_MODULE=/chemin/vers/@electric-sql/pglite node tests/alert-access.cjs` valide la migration dans un Postgres isolé, pas dans la base de production. Rejouer également toutes les suites de régression existantes.
 
 Socle Resend : `npm ci --ignore-scripts`, `node tests/alert-transport.cjs`, `node tests/alert-callbacks.cjs`, puis `PGLITE_MODULE=/chemin/vers/@electric-sql/pglite node tests/alert-outbox.cjs`. Les requêtes HTTP sont simulées et la base SQL isolée : ces tests n’envoient aucun email. Les assertions de réservation sont séquentielles ; un test de concurrence multi-connexion en recette reste requis.
+
+Coordinateur : `node tests/alert-dispatch.cjs` et `node tests/alert-sources.cjs`. Ils couvrent notamment le mode lecture seule, les changements entre lectures, deux workers simulés concurrents, les erreurs après acceptation fournisseur et la pagination. `alert-outbox.cjs` couvre également la migration du déclencheur et le contrôle des PME fraîchement qualifiées. La concurrence SQL multi-connexion et le parcours réel restent à valider.
 
 ## Retrait
 
