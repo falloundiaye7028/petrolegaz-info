@@ -44,6 +44,15 @@
       const selectedPme=pmes.find(p=>p.id===pmeId);
       const matches=selectedPme?.testOnly?[]:window.Matching.rank(selectedPme,opportunities);
       $('matches').textContent=matches.length?'Correspondances indicatives — vérifiez les exigences dans l’avis source.':'Aucune correspondance exploitable actuellement.';
+      if(testPme?.testOnly===true&&pmeId===testPme.id){
+        const card=document.createElement('article'),title=document.createElement('h3'),note=document.createElement('p'),button=document.createElement('button');
+        const opportunityId='recTEST0000000002';
+        title.textContent='TEST — candidature fictive de recette';
+        note.textContent='Essai technique uniquement : aucun appel d’offres réel, aucun acheteur et aucun envoi. Les statuts restent des simulations.';
+        button.type='button';button.textContent='Créer la candidature TEST';button.disabled=rows.some(r=>r.opportunity_id===opportunityId);
+        button.addEventListener('click',()=>mutate(button,async()=>result(client.from('pme_applications').insert({pme_id:pmeId,opportunity_id:opportunityId,title:title.textContent}))));
+        card.append(title,note,button);$('matches').append(card);
+      }
       for(const match of matches){const a=match.opportunity,card=document.createElement('article');card.innerHTML=`<h3>${E(a.titre)}</h3><p>Score indicatif ${match.score}/100 : ${E(match.reasons.join(' ; '))}</p><a href="${E(window.Matching.source(a.sourceUrl))}" target="_blank" rel="noopener noreferrer">Vérifier l’avis source</a>`;
         const button=document.createElement('button');button.type='button';button.textContent='Ajouter au suivi privé';button.disabled=rows.some(r=>r.opportunity_id===a.id);
         button.addEventListener('click',()=>mutate(button,async()=>result(client.from('pme_applications').insert({pme_id:pmeId,opportunity_id:a.id,title:a.titre.slice(0,300)}))));card.append(button);$('matches').append(card);}

@@ -37,6 +37,8 @@ Après vérification de l’identité et du mandat par un autre canal, utiliser 
 
 ## Tests
 
+Dans la prévisualisation uniquement, sélectionner la PME fictive autorisée puis « Créer la candidature TEST ». L’opportunité synthétique `recTEST0000000002` n’est ni ajoutée à Airtable ni proposée dans les correspondances réelles. Le bouton utilise les mêmes droits RLS et le même historique serveur que le suivi normal. Vérifier création « À préparer », passage « Envoyée », puis « Abandonnée », et persistance après actualisation. Aucun envoi externe. Ne pas confondre ce scénario de recette avec une candidature réelle.
+
 - `node tests/pme-config.cjs`
 - `node tests/pme-otp.cjs` : simulation envoi, code expiré, format invalide, limitation, changement d’email, session et absence de rattachement automatique. La réception et la saisie d’un vrai code restent à valider par l’utilisateur.
 - `PGLITE_MODULE=/chemin/vers/@electric-sql/pglite node tests/private-access.cjs` (validé avec PGlite 0.5.8)
