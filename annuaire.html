@@ -57,6 +57,7 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 @media (max-width: 640px) { .nav-links a:not(.btn-wa) { display: none; } h1 { font-size: 26px; } .container { padding: 32px 20px; } .ad-banner{align-items:flex-start;flex-direction:column}.ad-btn{width:100%;text-align:center}.directory-tools { grid-template-columns: 1fr; } }
 </style>
 <link rel="stylesheet" href="assets/nav-mobile.css">
+<link rel="stylesheet" href="assets/catalogue.css">
 </head>
 <body>
 <header>
@@ -101,9 +102,11 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 <option value="pending">Profils à compléter</option>
 </select>
 </div>
-<p class="results-count" id="results-count" aria-live="polite"></p>
+<div class="catalogue-controls"><label>Localisation<select id="location"><option value="">Toutes les localisations</option></select></label><button id="reset" type="button">Réinitialiser les filtres</button></div>
+<p class="results-count" id="results-count" tabindex="-1" aria-live="polite"></p>
 
 <div class="grid" id="grid"></div>
+<nav id="pagination" class="pagination" aria-label="Pagination des résultats" hidden><button id="previous" type="button">Précédent</button><span id="page-status" aria-live="polite"></span><button id="next" type="button">Suivant</button></nav>
 </div>
 
 <section class="cta-section">
@@ -112,83 +115,8 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 <a href="inscription.html" class="cta-btn">Inscrire ma PME gratuitement →</a>
 </section>
 
-<script>
-let pmes = [];
-let secteurActif = '';
-let recherche = '';
-let verification = '';
-
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>'"]/g, character => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;',
-  })[character]);
-}
-
-function render(secteur = secteurActif) {
-  const grid = document.getElementById('grid');
-  const needle = recherche.trim().toLocaleLowerCase('fr-FR');
-  const filtered = pmes.filter(p => {
-    const haystack = [p.nom, p.secteur, p.localisation, p.description, ...(p.competences || [])].join(' ').toLocaleLowerCase('fr-FR');
-    return (!needle || haystack.includes(needle)) && (!secteur || p.secteur === secteur) && (!verification || (verification === 'verified' ? p.verifie : !p.verifie));
-  });
-  document.getElementById('results-count').textContent = `${filtered.length} entreprise${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
-  if (filtered.length === 0) {
-    grid.innerHTML = '<div class="empty"><p>Aucune entreprise ne correspond à ces critères. Modifiez la recherche ou les filtres.</p></div>';
-    return;
-  }
-  grid.innerHTML = filtered.map(p => `
-    <div class="card">
-      <div class="card-header">
-        <h3>${escapeHtml(p.nom)}</h3>
-        ${p.verifie ? '<span class="badge">✓ Vérifié</span>' : '<span class="badge-pending">Profil à compléter</span>'}
-      </div>
-      <div class="card-meta">📍 ${escapeHtml(p.localisation)} · 🏢 ${escapeHtml(p.secteur)}</div>
-      <p class="card-desc">${escapeHtml(p.description)}</p>
-      <div class="tags">${(Array.isArray(p.competences) ? p.competences : []).slice(0, 5).map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('')}</div>
-      ${p.verifie
-        ? `<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20contacter%20${encodeURIComponent(p.nom)}" target="_blank" rel="noopener" class="contact-btn">Contacter cette PME</a>`
-        : `<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20représente%20${encodeURIComponent(p.nom)}%20et%20je%20souhaite%20revendiquer%20et%20compléter%20cette%20fiche." target="_blank" rel="noopener" class="contact-btn">Revendiquer et compléter cette fiche</a>`
-      }
-    </div>
-  `).join('');
-}
-
-document.querySelectorAll('.filter').forEach(f => {
-  f.addEventListener('click', () => {
-    document.querySelectorAll('.filter').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
-    f.classList.add('active');
-    f.setAttribute('aria-pressed', 'true');
-    secteurActif = f.dataset.secteur || '';
-    render(secteurActif);
-  });
-});
-
-document.getElementById('search').addEventListener('input', event => { recherche = event.target.value; render(); });
-document.getElementById('verification').addEventListener('change', event => { verification = event.target.value; render(); });
-
-async function loadPMEs() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '<div class="empty"><p>Chargement des PME...</p></div>';
-
-  try {
-    const response = await fetch('/api/pmes', { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    if (!Array.isArray(data.pmes)) throw new Error('Réponse annuaire invalide');
-    pmes = data.pmes;
-    render(secteurActif);
-  } catch (error) {
-    console.error('Chargement de l’annuaire impossible', error);
-    grid.innerHTML = '<div class="empty"><p>Impossible de charger les PME. Réessayez dans quelques instants.</p></div>';
-  }
-}
-
-loadPMEs();
-</script>
+<script src="assets/catalogue.js"></script>
+<script src="assets/annuaire.js"></script>
 <script src="assets/nav-mobile.js"></script>
 </body>
 </html>
