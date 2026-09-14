@@ -52,6 +52,7 @@ export default async function handler(req, res) {
         localisation: fields.Localisation || '',
         cloture: fields['Date clôture'] || null,
         source: fields.Source || '',
+        sourceUrl: typeof fields['Lien source'] === 'string' ? fields['Lien source'] : '',
         priorite: fields['Priorité'] || 'Normale',
       };
     });

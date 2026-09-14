@@ -1,0 +1,10 @@
+.catalogue-controls{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:end}
+.catalogue-controls label{display:flex;flex-direction:column;gap:6px;font-size:14px;flex:1;min-width:180px}
+.catalogue-controls select,.catalogue-controls button,.pagination button,.retry{font:inherit;min-height:44px;padding:10px 14px;border:1px solid #94A3B8;border-radius:8px;background:white;color:#0B3D91;cursor:pointer}
+.pagination{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:16px;margin:28px 0;font-size:14px}
+.pagination button:disabled{opacity:.45;cursor:default}
+.catalogue-controls :focus-visible,.pagination button:focus-visible,.retry:focus-visible{outline:3px solid #0B3D91;outline-offset:3px}
+.source-link{display:inline-block;margin:0 12px 12px 0;color:#0B3D91;font-weight:600;overflow-wrap:anywhere}
+.source-note{font-size:14px;color:#475569;margin-bottom:12px}
+.catalogue-controls[hidden],.pagination[hidden]{display:none}
+.card h3,.card-desc,.ao h3,.ao p{overflow-wrap:anywhere}

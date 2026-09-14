@@ -15,6 +15,7 @@
 .opportunity-tools{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:12px;margin-bottom:18px}.opportunity-tools input,.opportunity-tools select{min-height:46px;padding:12px 14px;border:1px solid #CBD5E1;border-radius:10px;background:#fff;color:#0F172A;font:inherit}.opportunity-tools input:focus,.opportunity-tools select:focus{outline:3px solid rgba(11,61,145,.14);border-color:#0B3D91}.result-count{color:#64748B;font-size:14px;margin:0 0 18px}@media(max-width:640px){.opportunity-tools{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="assets/nav-mobile.css">
+<link rel="stylesheet" href="assets/catalogue.css">
 </head>
 <body>
 <header><div class="nav"><a href="/" class="logo" aria-label="PétroleGaz — Accueil"><img src="assets/petrolegaz-logo.png" alt="PétroleGaz — Contenu local Sénégal"></a><div class="nav-links" id="navLinks"><a href="annuaire.html">Annuaire</a><a href="appels-offres.html">Opportunités</a><a href="enterprise.html">Enterprise</a><a href="connexion.html">Connexion</a><a href="inscription.html" class="btn-wa">Inscrire ma PME</a></div><button class="menu-toggle" type="button" onclick="toggleMenu()" aria-label="Menu" aria-controls="navLinks" aria-expanded="false">☰</button></div></header>
@@ -22,83 +23,15 @@
   <h1>Appels d'offres</h1>
   <p class="subtitle">Toutes les opportunités du secteur pétrolier, gazier et minier au Sénégal.</p>
   <aside class="ad-banner" aria-label="Publicité"><div><span class="ad-label">Publicité · Démonstration</span><h2>Équipements, EPI et services industriels</h2><p>Positionnez votre marque face aux PME qui répondent aux marchés.</p></div><a class="ad-btn" href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20r%C3%A9server%20une%20publicit%C3%A9%20sur%20la%20page%20des%20appels%20d%27offres." target="_blank" rel="noopener">Réserver →</a></aside>
-  <div class="opportunity-tools" role="search" aria-label="Filtrer les appels d'offres"><input id="search" type="search" placeholder="Rechercher une opportunité, une entreprise…" autocomplete="off"><select id="urgency" aria-label="Filtrer par urgence"><option value="">Toutes les échéances</option><option value="urgent">Clôture sous 7 jours</option><option value="open">Encore ouvertes</option></select></div>
-  <p class="result-count" id="result-count" aria-live="polite"></p>
+  <div class="opportunity-tools" role="search" aria-label="Filtrer les appels d'offres"><input id="search" aria-label="Rechercher une opportunité ou une entreprise" type="search" placeholder="Rechercher une opportunité, une entreprise…" autocomplete="off"><select id="urgency" aria-label="Filtrer par urgence"><option value="">Toutes les échéances</option><option value="urgent">Clôture sous 7 jours</option><option value="open">Encore ouvertes</option><option value="unknown">Date inconnue</option><option value="closed">Clôturées</option></select></div>
+  <div class="catalogue-controls"><label>Secteur<select id="sector"><option value="">Tous les secteurs</option></select></label><label>Donneur d’ordre<select id="buyer"><option value="">Tous les donneurs d’ordre</option></select></label><button id="reset" type="button">Réinitialiser les filtres</button></div>
+<p class="result-count" id="result-count" tabindex="-1" aria-live="polite"></p>
   <div id="counter" class="counter" hidden></div>
   <div class="ao-list" id="ao-list"><div class="loading"><div class="spinner"></div><p style="margin-top:16px">Chargement des appels d'offres...</p></div></div>
+<nav id="pagination" class="pagination" aria-label="Pagination des résultats" hidden><button id="previous" type="button">Précédent</button><span id="page-status" aria-live="polite"></span><button id="next" type="button">Suivant</button></nav>
 </main>
-<script>
-const list = document.getElementById('ao-list');
-const counter = document.getElementById('counter');
-const search = document.getElementById('search');
-search.setAttribute('aria-label', 'Rechercher une opportunité ou une entreprise');
-const urgency = document.getElementById('urgency');
-const resultCount = document.getElementById('result-count');
-let opportunities = [];
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-}
-function dateCloture(value) {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(value)) return null;
-  const date = new Date(value.slice(0, 10) + 'T00:00:00Z');
-  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value.slice(0, 10) ? date : null;
-}
-function formatDate(value) {
-  const date = dateCloture(value);
-  return date ? date.toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric',timeZone:'Africa/Dakar'}) : 'Non précisée';
-}
-function joursRestants(value) {
-  const date = dateCloture(value);
-  if (!date) return null;
-  const today = new Date();
-  return Math.round((date - Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())) / 86400000);
-}
-function badgeInfo(days, priority) {
-  if (days === null) return {cls:'closed',text:'Date inconnue'};
-  if (days < 0) return {cls:'closed',text:'Clôturé'};
-  if (days === 0) return {cls:'urgent',text:"Aujourd'hui"};
-  if (days <= 7) return {cls:'urgent',text:`J-${days}`};
-  if (priority === 'Urgente' || days <= 15) return {cls:'normal',text:`J-${days}`};
-  return {cls:'new',text:`J-${days}`};
-}
-function renderOpportunities() {
-  const needle = search.value.trim().toLocaleLowerCase('fr-FR');
-  const filtered = opportunities.filter(ao => {
-    const haystack = [ao.titre, ao.description, ao.donneur, ao.localisation, ao.source, ...(ao.secteur || [])].join(' ').toLocaleLowerCase('fr-FR');
-    const days = joursRestants(ao.cloture);
-    const matchesSearch = !needle || haystack.includes(needle);
-    const matchesUrgency = !urgency.value || (days !== null && days >= 0 && (urgency.value !== 'urgent' || days <= 7));
-    return matchesSearch && matchesUrgency;
-  });
-  resultCount.textContent = `${filtered.length} opportunité${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
-  if (!filtered.length) { list.innerHTML = '<div class="empty"><div class="empty-icon">🔎</div><strong>Aucune opportunité correspondante</strong><p>Essayez une autre recherche ou modifiez le filtre.</p></div>'; return; }
-  list.innerHTML = filtered.map(ao => {
-    const badge=badgeInfo(joursRestants(ao.cloture),ao.priorite);
-    const tags=(Array.isArray(ao.secteur)?ao.secteur:[]).map(s=>`<span class="ao-tag">${escapeHtml(s)}</span>`).join('');
-    const message=encodeURIComponent(`Bonjour, je suis intéressé par l'appel d'offres : ${ao.titre}`);
-    return `<article class="ao"><div class="ao-header"><h3>${escapeHtml(ao.titre)}</h3><span class="ao-badge ${badge.cls}">${badge.text}</span></div><p>${escapeHtml(ao.description)}</p>${tags?`<div class="ao-tags">${tags}</div>`:''}<div class="ao-meta"><span>🏢 ${escapeHtml(ao.donneur)}</span><span>📍 ${escapeHtml(ao.localisation)}</span><span>📅 Clôture : ${formatDate(ao.cloture)}</span>${ao.source?`<span>📋 ${escapeHtml(ao.source)}</span>`:''}</div><a href="https://wa.me/221778001717?text=${message}" target="_blank" rel="noopener noreferrer" class="btn-primary">Je suis intéressé →</a></article>`;
-  }).join('');
-}
-async function loadAppelsOffres() {
-  try {
-    const response = await fetch('/api/appels-offres');
-    if (!response.ok) throw new Error('Chargement impossible');
-    const { appelsOffres } = await response.json();
-    if (!Array.isArray(appelsOffres)) throw new Error('Réponse opportunités invalide');
-    opportunities = appelsOffres;
-    const urgentCount = appelsOffres.filter(ao => { const d=joursRestants(ao.cloture); return d!==null&&d>=0&&d<=7; }).length;
-    counter.hidden = false;
-    counter.textContent = `${appelsOffres.length} avis référencés · ${urgentCount} avec une clôture sous 7 jours`;
-    renderOpportunities();
-  } catch (error) {
-    console.error(error);
-    list.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><strong>Impossible de charger les appels d\'offres</strong><p>Réessayez dans quelques instants.</p></div>';
-  }
-}
-search.addEventListener('input', renderOpportunities);
-urgency.addEventListener('change', renderOpportunities);
-loadAppelsOffres();
-</script>
+<script src="assets/catalogue.js"></script>
+<script src="assets/opportunites.js"></script>
 <script src="assets/nav-mobile.js"></script>
 </body>
 </html>
