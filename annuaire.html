@@ -23,10 +23,14 @@ header { background: white; border-bottom: 1px solid #E2E8F0; padding: 16px 24px
 h1 { font-size: 36px; margin-bottom: 12px; }
 .subtitle { color: #64748B; margin-bottom: 40px; font-size: 17px; }
 .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+.directory-tools { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 12px; margin-bottom: 18px; }
+.directory-tools input, .directory-tools select { min-height: 46px; padding: 12px 14px; border: 1px solid #CBD5E1; border-radius: 10px; background: #fff; color: #0F172A; font: inherit; }
+.directory-tools input:focus, .directory-tools select:focus { outline: 3px solid rgba(11,61,145,.14); border-color: #0B3D91; }
+.results-count { color: #64748B; font-size: 14px; margin: 0 0 18px; }
 .filter { padding: 8px 16px; border-radius: 50px; background: white; border: 1px solid #E2E8F0; text-decoration: none; color: #64748B; font-size: 14px; font-weight: 500; transition: all 0.2s; cursor: pointer; }
 .filter:hover { border-color: #0B3D91; color: #0B3D91; }
 .filter.active { background: #0B3D91; color: white; border-color: #0B3D91; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 24px; }
 .card { background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 24px; transition: all 0.3s; display: flex; flex-direction: column; }
 .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: #0B3D91; }
 .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; gap: 12px; }
@@ -50,7 +54,7 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 .cta-section h2 { font-size: 32px; margin-bottom: 16px; }
 .cta-section p { font-size: 17px; opacity: 0.9; margin-bottom: 32px; }
 .cta-btn { background: #25D366; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; }
-@media (max-width: 640px) { .nav-links a:not(.btn-wa) { display: none; } h1 { font-size: 26px; } .container { padding: 32px 20px; } .ad-banner{align-items:flex-start;flex-direction:column}.ad-btn{width:100%;text-align:center} }
+@media (max-width: 640px) { .nav-links a:not(.btn-wa) { display: none; } h1 { font-size: 26px; } .container { padding: 32px 20px; } .ad-banner{align-items:flex-start;flex-direction:column}.ad-btn{width:100%;text-align:center}.directory-tools { grid-template-columns: 1fr; } }
 </style>
 <link rel="stylesheet" href="assets/nav-mobile.css">
 </head>
@@ -79,15 +83,25 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 </aside>
 
 <div class="filters" id="filters">
-<div class="filter active" data-secteur="">Tous</div>
-<div class="filter" data-secteur="Transport">Transport</div>
-<div class="filter" data-secteur="Sécurité">Sécurité</div>
-<div class="filter" data-secteur="Restauration">Restauration</div>
-<div class="filter" data-secteur="Maintenance">Maintenance</div>
-<div class="filter" data-secteur="BTP">BTP</div>
-<div class="filter" data-secteur="Ingénierie">Ingénierie</div>
-<div class="filter" data-secteur="Formation">Formation</div>
+<button type="button" class="filter active" aria-pressed="true" data-secteur="">Tous</button>
+<button type="button" class="filter" aria-pressed="false" data-secteur="Transport">Transport</button>
+<button type="button" class="filter" aria-pressed="false" data-secteur="Sécurité">Sécurité</button>
+<button type="button" class="filter" aria-pressed="false" data-secteur="Restauration">Restauration</button>
+<button type="button" class="filter" aria-pressed="false" data-secteur="Maintenance">Maintenance</button>
+<button type="button" class="filter" aria-pressed="false" data-secteur="BTP">BTP</button>
+<button type="button" class="filter" aria-pressed="false" data-secteur="Ingénierie">Ingénierie</button>
+<button type="button" class="filter" aria-pressed="false" data-secteur="Formation">Formation</button>
 </div>
+
+<div class="directory-tools" role="search" aria-label="Rechercher une entreprise">
+<input id="search" type="search" aria-label="Rechercher une PME ou une compétence" placeholder="Rechercher une PME, une compétence…" autocomplete="off">
+<select id="verification" aria-label="Filtrer par statut">
+<option value="">Tous les profils</option>
+<option value="verified">Profils vérifiés</option>
+<option value="pending">Profils à compléter</option>
+</select>
+</div>
+<p class="results-count" id="results-count" aria-live="polite"></p>
 
 <div class="grid" id="grid"></div>
 </div>
@@ -101,6 +115,8 @@ h1 { font-size: 36px; margin-bottom: 12px; }
 <script>
 let pmes = [];
 let secteurActif = '';
+let recherche = '';
+let verification = '';
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, character => ({
@@ -112,11 +128,16 @@ function escapeHtml(value) {
   })[character]);
 }
 
-function render(secteur = "") {
+function render(secteur = secteurActif) {
   const grid = document.getElementById('grid');
-  const filtered = secteur ? pmes.filter(p => p.secteur === secteur) : pmes;
+  const needle = recherche.trim().toLocaleLowerCase('fr-FR');
+  const filtered = pmes.filter(p => {
+    const haystack = [p.nom, p.secteur, p.localisation, p.description, ...(p.competences || [])].join(' ').toLocaleLowerCase('fr-FR');
+    return (!needle || haystack.includes(needle)) && (!secteur || p.secteur === secteur) && (!verification || (verification === 'verified' ? p.verifie : !p.verifie));
+  });
+  document.getElementById('results-count').textContent = `${filtered.length} entreprise${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
   if (filtered.length === 0) {
-    grid.innerHTML = '<div class="empty"><p>Aucune PME dans cette catégorie pour le moment.</p></div>';
+    grid.innerHTML = '<div class="empty"><p>Aucune entreprise ne correspond à ces critères. Modifiez la recherche ou les filtres.</p></div>';
     return;
   }
   grid.innerHTML = filtered.map(p => `
@@ -127,7 +148,7 @@ function render(secteur = "") {
       </div>
       <div class="card-meta">📍 ${escapeHtml(p.localisation)} · 🏢 ${escapeHtml(p.secteur)}</div>
       <p class="card-desc">${escapeHtml(p.description)}</p>
-      <div class="tags">${p.competences.slice(0, 5).map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('')}</div>
+      <div class="tags">${(Array.isArray(p.competences) ? p.competences : []).slice(0, 5).map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('')}</div>
       ${p.verifie
         ? `<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20contacter%20${encodeURIComponent(p.nom)}" target="_blank" rel="noopener" class="contact-btn">Contacter cette PME</a>`
         : `<a href="https://wa.me/221778001717?text=Bonjour%2C%20je%20représente%20${encodeURIComponent(p.nom)}%20et%20je%20souhaite%20revendiquer%20et%20compléter%20cette%20fiche." target="_blank" rel="noopener" class="contact-btn">Revendiquer et compléter cette fiche</a>`
@@ -138,12 +159,16 @@ function render(secteur = "") {
 
 document.querySelectorAll('.filter').forEach(f => {
   f.addEventListener('click', () => {
-    document.querySelectorAll('.filter').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.filter').forEach(x => { x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
     f.classList.add('active');
+    f.setAttribute('aria-pressed', 'true');
     secteurActif = f.dataset.secteur || '';
     render(secteurActif);
   });
 });
+
+document.getElementById('search').addEventListener('input', event => { recherche = event.target.value; render(); });
+document.getElementById('verification').addEventListener('change', event => { verification = event.target.value; render(); });
 
 async function loadPMEs() {
   const grid = document.getElementById('grid');
@@ -153,7 +178,8 @@ async function loadPMEs() {
     const response = await fetch('/api/pmes', { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
-    pmes = Array.isArray(data.pmes) ? data.pmes : [];
+    if (!Array.isArray(data.pmes)) throw new Error('Réponse annuaire invalide');
+    pmes = data.pmes;
     render(secteurActif);
   } catch (error) {
     console.error('Chargement de l’annuaire impossible', error);

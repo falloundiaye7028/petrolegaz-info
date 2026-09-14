@@ -11,6 +11,9 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;background:#F8FAFC;color:#0F172A}header{background:#fff;border-bottom:1px solid #E2E8F0;padding:16px 24px;position:sticky;top:0;z-index:100}.nav{max-width:1180px;margin:auto;display:flex;justify-content:space-between;align-items:center}.logo{text-decoration:none;display:flex;align-items:center}.logo img{display:block;width:190px;height:auto}.nav-links{display:flex;gap:20px;align-items:center}.nav-links a{color:#64748B;text-decoration:none;font-size:14px;font-weight:500}.btn-wa{background:#25D366!important;color:#fff!important;padding:10px 18px;border-radius:8px}.container{max-width:900px;margin:auto;padding:48px 24px}h1{font-size:36px;margin-bottom:12px}.subtitle{color:#64748B;margin-bottom:40px;font-size:17px}.ad-banner{margin-bottom:26px;border-radius:14px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:linear-gradient(120deg,#78350F,#D97706);color:white;box-shadow:0 10px 24px rgba(146,64,14,.14)}.ad-label{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;opacity:.75}.ad-banner h2{font-size:19px;margin:5px 0}.ad-banner p{font-size:13px;opacity:.85}.ad-btn{background:white;color:#92400E;text-decoration:none;padding:11px 16px;border-radius:8px;font-size:13px;font-weight:800;white-space:nowrap}.ao-list{display:flex;flex-direction:column;gap:16px}.ao{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:24px;transition:.3s}.ao:hover{box-shadow:0 8px 20px rgba(0,0,0,.06);border-color:#0B3D91}.ao-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:12px}.ao h3{font-size:18px}.ao-badge{padding:6px 12px;border-radius:50px;font-size:12px;font-weight:700;white-space:nowrap}.urgent{background:#FEE2E2;color:#991B1B}.normal{background:#FEF3C7;color:#92400E}.new{background:#DCFCE7;color:#166534}.closed{background:#E2E8F0;color:#475569}.ao p{color:#334155;font-size:14px;margin-bottom:16px;line-height:1.6}.ao-meta,.ao-tags{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}.ao-meta{gap:16px;font-size:13px;color:#64748B}.ao-tag{background:#E6EEFB;color:#0B3D91;font-size:11px;padding:4px 10px;border-radius:6px;font-weight:500}.btn-primary{display:inline-block;background:#0B3D91;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px}.empty,.loading{text-align:center;padding:80px 24px;color:#64748B;background:#fff;border-radius:12px}.empty-icon{font-size:48px;margin-bottom:16px}.spinner{display:inline-block;width:32px;height:32px;border:3px solid #E2E8F0;border-top-color:#0B3D91;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.counter{font-size:13px;color:#64748B;margin-bottom:24px;padding:12px 16px;background:#E6EEFB;border-radius:8px;border-left:4px solid #0B3D91}@media(max-width:640px){.nav-links a:not(.btn-wa){display:none}h1{font-size:26px}.container{padding:32px 20px}.ao-header{flex-direction:column}.ad-banner{flex-direction:column;align-items:flex-start}.ad-btn{width:100%;text-align:center}}
 </style>
+<style>
+.opportunity-tools{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:12px;margin-bottom:18px}.opportunity-tools input,.opportunity-tools select{min-height:46px;padding:12px 14px;border:1px solid #CBD5E1;border-radius:10px;background:#fff;color:#0F172A;font:inherit}.opportunity-tools input:focus,.opportunity-tools select:focus{outline:3px solid rgba(11,61,145,.14);border-color:#0B3D91}.result-count{color:#64748B;font-size:14px;margin:0 0 18px}@media(max-width:640px){.opportunity-tools{grid-template-columns:1fr}}
+</style>
 <link rel="stylesheet" href="assets/nav-mobile.css">
 </head>
 <body>
@@ -19,26 +22,36 @@
   <h1>Appels d'offres</h1>
   <p class="subtitle">Toutes les opportunités du secteur pétrolier, gazier et minier au Sénégal.</p>
   <aside class="ad-banner" aria-label="Publicité"><div><span class="ad-label">Publicité · Démonstration</span><h2>Équipements, EPI et services industriels</h2><p>Positionnez votre marque face aux PME qui répondent aux marchés.</p></div><a class="ad-btn" href="https://wa.me/221778001717?text=Bonjour%2C%20je%20souhaite%20r%C3%A9server%20une%20publicit%C3%A9%20sur%20la%20page%20des%20appels%20d%27offres." target="_blank" rel="noopener">Réserver →</a></aside>
+  <div class="opportunity-tools" role="search" aria-label="Filtrer les appels d'offres"><input id="search" type="search" placeholder="Rechercher une opportunité, une entreprise…" autocomplete="off"><select id="urgency" aria-label="Filtrer par urgence"><option value="">Toutes les échéances</option><option value="urgent">Clôture sous 7 jours</option><option value="open">Encore ouvertes</option></select></div>
+  <p class="result-count" id="result-count" aria-live="polite"></p>
   <div id="counter" class="counter" hidden></div>
   <div class="ao-list" id="ao-list"><div class="loading"><div class="spinner"></div><p style="margin-top:16px">Chargement des appels d'offres...</p></div></div>
 </main>
 <script>
 const list = document.getElementById('ao-list');
 const counter = document.getElementById('counter');
+const search = document.getElementById('search');
+search.setAttribute('aria-label', 'Rechercher une opportunité ou une entreprise');
+const urgency = document.getElementById('urgency');
+const resultCount = document.getElementById('result-count');
+let opportunities = [];
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 }
+function dateCloture(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(value)) return null;
+  const date = new Date(value.slice(0, 10) + 'T00:00:00Z');
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value.slice(0, 10) ? date : null;
+}
 function formatDate(value) {
-  if (!value) return 'Non précisée';
-  const [year, month, day] = value.slice(0, 10).split('-').map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'});
+  const date = dateCloture(value);
+  return date ? date.toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric',timeZone:'Africa/Dakar'}) : 'Non précisée';
 }
 function joursRestants(value) {
-  if (!value) return null;
-  const [year, month, day] = value.slice(0, 10).split('-').map(Number);
+  const date = dateCloture(value);
+  if (!date) return null;
   const today = new Date();
-  const startToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  return Math.ceil((new Date(year, month - 1, day) - startToday) / 86400000);
+  return Math.round((date - Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())) / 86400000);
 }
 function badgeInfo(days, priority) {
   if (days === null) return {cls:'closed',text:'Date inconnue'};
@@ -48,29 +61,42 @@ function badgeInfo(days, priority) {
   if (priority === 'Urgente' || days <= 15) return {cls:'normal',text:`J-${days}`};
   return {cls:'new',text:`J-${days}`};
 }
+function renderOpportunities() {
+  const needle = search.value.trim().toLocaleLowerCase('fr-FR');
+  const filtered = opportunities.filter(ao => {
+    const haystack = [ao.titre, ao.description, ao.donneur, ao.localisation, ao.source, ...(ao.secteur || [])].join(' ').toLocaleLowerCase('fr-FR');
+    const days = joursRestants(ao.cloture);
+    const matchesSearch = !needle || haystack.includes(needle);
+    const matchesUrgency = !urgency.value || (days !== null && days >= 0 && (urgency.value !== 'urgent' || days <= 7));
+    return matchesSearch && matchesUrgency;
+  });
+  resultCount.textContent = `${filtered.length} opportunité${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
+  if (!filtered.length) { list.innerHTML = '<div class="empty"><div class="empty-icon">🔎</div><strong>Aucune opportunité correspondante</strong><p>Essayez une autre recherche ou modifiez le filtre.</p></div>'; return; }
+  list.innerHTML = filtered.map(ao => {
+    const badge=badgeInfo(joursRestants(ao.cloture),ao.priorite);
+    const tags=(Array.isArray(ao.secteur)?ao.secteur:[]).map(s=>`<span class="ao-tag">${escapeHtml(s)}</span>`).join('');
+    const message=encodeURIComponent(`Bonjour, je suis intéressé par l'appel d'offres : ${ao.titre}`);
+    return `<article class="ao"><div class="ao-header"><h3>${escapeHtml(ao.titre)}</h3><span class="ao-badge ${badge.cls}">${badge.text}</span></div><p>${escapeHtml(ao.description)}</p>${tags?`<div class="ao-tags">${tags}</div>`:''}<div class="ao-meta"><span>🏢 ${escapeHtml(ao.donneur)}</span><span>📍 ${escapeHtml(ao.localisation)}</span><span>📅 Clôture : ${formatDate(ao.cloture)}</span>${ao.source?`<span>📋 ${escapeHtml(ao.source)}</span>`:''}</div><a href="https://wa.me/221778001717?text=${message}" target="_blank" rel="noopener noreferrer" class="btn-primary">Je suis intéressé →</a></article>`;
+  }).join('');
+}
 async function loadAppelsOffres() {
   try {
     const response = await fetch('/api/appels-offres');
     if (!response.ok) throw new Error('Chargement impossible');
-    const { appelsOffres = [] } = await response.json();
-    if (!appelsOffres.length) {
-      list.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><strong>Aucun appel d\'offres en cours</strong><p>Revenez dans quelques jours.</p></div>';
-      return;
-    }
+    const { appelsOffres } = await response.json();
+    if (!Array.isArray(appelsOffres)) throw new Error('Réponse opportunités invalide');
+    opportunities = appelsOffres;
     const urgentCount = appelsOffres.filter(ao => { const d=joursRestants(ao.cloture); return d!==null&&d>=0&&d<=7; }).length;
     counter.hidden = false;
-    counter.innerHTML = `<strong>${appelsOffres.length}</strong> appel${appelsOffres.length>1?'s':''} d'offres en cours${urgentCount?` · <span style="color:#991B1B;font-weight:700">${urgentCount} urgent${urgentCount>1?'s':''}</span>`:''}`;
-    list.innerHTML = appelsOffres.map(ao => {
-      const badge=badgeInfo(joursRestants(ao.cloture),ao.priorite);
-      const tags=(Array.isArray(ao.secteur)?ao.secteur:[]).map(s=>`<span class="ao-tag">${escapeHtml(s)}</span>`).join('');
-      const message=encodeURIComponent(`Bonjour, je suis intéressé par l'appel d'offres : ${ao.titre}`);
-      return `<article class="ao"><div class="ao-header"><h3>${escapeHtml(ao.titre)}</h3><span class="ao-badge ${badge.cls}">${badge.text}</span></div><p>${escapeHtml(ao.description)}</p>${tags?`<div class="ao-tags">${tags}</div>`:''}<div class="ao-meta"><span>🏢 ${escapeHtml(ao.donneur)}</span><span>📍 ${escapeHtml(ao.localisation)}</span><span>📅 Clôture : ${formatDate(ao.cloture)}</span>${ao.source?`<span>📋 ${escapeHtml(ao.source)}</span>`:''}</div><a href="https://wa.me/221778001717?text=${message}" target="_blank" rel="noopener noreferrer" class="btn-primary">Je suis intéressé →</a></article>`;
-    }).join('');
+    counter.textContent = `${appelsOffres.length} avis référencés · ${urgentCount} avec une clôture sous 7 jours`;
+    renderOpportunities();
   } catch (error) {
     console.error(error);
     list.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><strong>Impossible de charger les appels d\'offres</strong><p>Réessayez dans quelques instants.</p></div>';
   }
 }
+search.addEventListener('input', renderOpportunities);
+urgency.addEventListener('change', renderOpportunities);
 loadAppelsOffres();
 </script>
 <script src="assets/nav-mobile.js"></script>
