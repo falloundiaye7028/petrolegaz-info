@@ -1,7 +1,11 @@
 (() => {
   const $=id=>document.getElementById(id), E=window.Catalogue.escape;
   const labels={preparing:'À préparer',sent:'Envoyée',discussion:'En échange',accepted:'Retenue',rejected:'Non retenue',abandoned:'Abandonnée'};
-  let client, user, pmes=[], opportunities=[], generation=0;
+  let client, user, pmes=[], opportunities=[], generation=0, pendingEmail='', authBusy=false;
+  const callbackParams=new URLSearchParams(location.search), callbackHash=new URLSearchParams(location.hash.slice(1));
+  let callbackError=callbackParams.has('error')||callbackHash.has('error');
+  if(callbackError){['error','error_code','error_description'].forEach(k=>callbackParams.delete(k));history.replaceState(null,'',location.pathname+(callbackParams.size?'?'+callbackParams:''));}
+  function authMessage(error){return error?.status===429||error?.code==='over_email_send_rate_limit'||error?.code==='over_request_rate_limit'?'Trop de tentatives. Patientez avant de réessayer.':error?.code==='otp_expired'?'Code invalide, expiré ou déjà utilisé. Demandez un nouveau code et utilisez uniquement le dernier reçu.':'Connexion impossible. Vérifiez votre code ou réessayez plus tard.';}
   const say=text=>{$('notice').textContent=text;};
   function clearPrivate(){generation++;user=null;$('workspace').hidden=true;['requests','applications','matches','identity','member-pme','claim-pme'].forEach(id=>$(id).replaceChildren());$('claim-message').value='';}
   async function result(query){const r=await query;if(r.error)throw r.error;return r.data;}
@@ -10,7 +14,8 @@
     clearPrivate(); const stamp=generation;
     const {data,error}=await client.auth.getUser(); if(stamp!==generation)return;
     $('login').hidden=false;
-    if(error||!data.user){say('Connectez-vous pour accéder à votre espace privé.');return;}
+    if(error||!data.user){say(callbackError?'Ce lien est invalide, expiré ou déjà utilisé. Demandez un code ci-dessous pour vous connecter.':'Connectez-vous pour accéder à votre espace privé.');return;}
+    pendingEmail='';$('otp-code').value='';$('otp-form').hidden=true;callbackError=false;
     user=data.user;$('login').hidden=true;$('workspace').hidden=false;$('identity').textContent='Connecté : '+user.email;
     await refresh();
   }
@@ -48,8 +53,12 @@
     }catch{if(stamp===generation)say('Suivi indisponible ou accès révoqué. Actualisez votre espace.');}
   }
   async function mutate(control,action){const stamp=generation;control.disabled=true;try{await action();if(stamp!==generation)return;say('Enregistré dans votre espace privé.');await renderApplications();}catch{if(stamp===generation)say('Enregistrement impossible : accès à vérifier ou candidature déjà présente.');}finally{control.disabled=false;}}
-  $('login-form').addEventListener('submit',async e=>{e.preventDefault();const button=e.target.querySelector('button');button.disabled=true;
-    try{const {error}=await client.auth.signInWithOtp({email:$('email').value.trim(),options:{emailRedirectTo:location.origin+'/espace-pme.html',shouldCreateUser:true}});if(error)throw error;say('Si l’envoi est autorisé, un lien vous parviendra par email. Vérifiez les indésirables. Ouvrez-le dans ce navigateur.');}catch{say('Envoi indisponible. Réessayez plus tard ou contactez l’équipe ; aucun accès PME n’a été accordé.');}finally{button.disabled=false;}});
+  $('email').addEventListener('input',()=>{pendingEmail='';$('otp-form').hidden=true;$('otp-code').value='';});
+  $('login-form').addEventListener('submit',async e=>{e.preventDefault();if(authBusy||!client)return;authBusy=true;const button=e.target.querySelector('button'),email=$('email').value.trim();button.disabled=true;$('email').disabled=true;
+    pendingEmail='';$('otp-form').hidden=true;$('otp-code').value='';
+    try{const {error}=await client.auth.signInWithOtp({email,options:{shouldCreateUser:true}});if(error)throw error;pendingEmail=email;callbackError=false;$('otp-recipient').textContent='Adresse utilisée : '+email;$('otp-form').hidden=false;say('Si l’envoi est autorisé, un code vous parviendra par email. Vérifiez les indésirables et saisissez le dernier code reçu.');$('otp-code').focus();}catch(error){say(error?.status===429?authMessage(error):'Envoi indisponible. Patientez puis réessayez ; aucun accès PME n’a été accordé.');}finally{authBusy=false;button.disabled=false;$('email').disabled=false;}});
+  $('otp-form').addEventListener('submit',async e=>{e.preventDefault();if(authBusy||!client||!pendingEmail)return;const token=$('otp-code').value.trim();if(!/^[0-9]{6,10}$/.test(token)){say('Saisissez le code numérique reçu par email.');return;}authBusy=true;const button=e.target.querySelector('button');button.disabled=true;$('email').disabled=true;
+    try{const {data,error}=await client.auth.verifyOtp({email:pendingEmail,token,type:'email'});if(error)throw error;if(!data?.session)throw Error();$('otp-code').value='';await session();}catch(error){say(authMessage(error));$('otp-code').value='';}finally{authBusy=false;button.disabled=false;$('email').disabled=false;}});
   $('claim-form').addEventListener('submit',async e=>{e.preventDefault();if(!user)return;const button=e.target.querySelector('button'),stamp=generation;button.disabled=true;
     try{await result(client.from('pme_access_requests').insert({pme_id:$('claim-pme').value,message:$('claim-message').value.trim()}));if(stamp!==generation)return;$('claim-message').value='';await refresh();say('Demande enregistrée, en attente de vérification manuelle. Aucun email de notification automatique.');}catch{if(stamp===generation)say('Demande non enregistrée : elle existe peut-être déjà, ou le service est indisponible.');}finally{button.disabled=false;}});
   $('member-pme').addEventListener('change',renderApplications);$('refresh').addEventListener('click',refresh);
