@@ -1,13 +1,13 @@
 (() => {
   const $=id=>document.getElementById(id), E=window.Catalogue.escape;
   const labels={preparing:'À préparer',sent:'Envoyée',discussion:'En échange',accepted:'Retenue',rejected:'Non retenue',abandoned:'Abandonnée'};
-  let client, user, pmes=[], opportunities=[], generation=0, pendingEmail='', authBusy=false, testPme=null;
+  let client, user, pmes=[], opportunities=[], generation=0, pendingEmail='', authBusy=false, testPme=null, alertPreferencesEnabled=false, memberIds=[];
   const callbackParams=new URLSearchParams(location.search), callbackHash=new URLSearchParams(location.hash.slice(1));
   let callbackError=callbackParams.has('error')||callbackHash.has('error');
   if(callbackError){['error','error_code','error_description'].forEach(k=>callbackParams.delete(k));history.replaceState(null,'',location.pathname+(callbackParams.size?'?'+callbackParams:''));}
   function authMessage(error){return error?.status===429||error?.code==='over_email_send_rate_limit'||error?.code==='over_request_rate_limit'?'Trop de tentatives. Patientez avant de réessayer.':error?.code==='otp_expired'?'Code invalide, expiré ou déjà utilisé. Demandez un nouveau code et utilisez uniquement le dernier reçu.':'Connexion impossible. Vérifiez votre code ou réessayez plus tard.';}
   const say=text=>{$('notice').textContent=text;};
-  function clearPrivate(){generation++;user=null;$('workspace').hidden=true;['requests','applications','matches','identity','member-pme','claim-pme'].forEach(id=>$(id).replaceChildren());$('claim-message').value='';}
+  function clearPrivate(){generation++;user=null;memberIds=[];window.AlertPreferences?.reset();$('workspace').hidden=true;['requests','applications','matches','identity','member-pme','claim-pme'].forEach(id=>$(id).replaceChildren());$('claim-message').value='';}
   async function result(query){const r=await query;if(r.error)throw r.error;return r.data;}
   async function catalogue(){const data=await Promise.all(['/api/pmes','/api/appels-offres'].map(async url=>{const r=await fetch(url,{signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error();return r.json();}));if(!Array.isArray(data[0].pmes)||!Array.isArray(data[1].appelsOffres))throw Error();return data;}
   async function session(){
@@ -21,12 +21,15 @@
   }
   async function refresh(){
     if(!user)return;const stamp=++generation;
+    if(alertPreferencesEnabled)void window.AlertPreferences?.load(client,user);
+    memberIds=[];
     $('applications').replaceChildren();$('matches').replaceChildren();$('member-pme').replaceChildren();$('claim-pme').replaceChildren();$('requests').replaceChildren();
     say('Chargement de votre espace…');
     try{
       const [catalog,members,requests]=await Promise.all([catalogue(),result(client.from('pme_memberships').select('pme_id')),result(client.from('pme_access_requests').select('pme_id,status').order('created_at',{ascending:false}).limit(100))]);
       if(stamp!==generation)return;
       pmes=catalog[0].pmes;opportunities=catalog[1].appelsOffres;
+      memberIds=members.map(m=>m.pme_id);
       if(testPme&&!pmes.some(p=>p.id===testPme.id))pmes=[testPme,...pmes];
       $('claim-pme').replaceChildren(new Option('Choisir une PME',''),...pmes.map(p=>new Option(p.nom,p.id)));
       const allowed=members.map(m=>new Option(pmes.find(p=>p.id===m.pme_id)?.nom||m.pme_id,m.pme_id));
@@ -73,9 +76,11 @@
   $('claim-form').addEventListener('submit',async e=>{e.preventDefault();if(!user)return;const button=e.target.querySelector('button'),stamp=generation;button.disabled=true;
     try{await result(client.from('pme_access_requests').insert({pme_id:$('claim-pme').value,message:$('claim-message').value.trim()}));if(stamp!==generation)return;$('claim-message').value='';await refresh();say('Demande enregistrée, en attente de vérification manuelle. Aucun email de notification automatique.');}catch{if(stamp===generation)say('Demande non enregistrée : elle existe peut-être déjà, ou le service est indisponible.');}finally{button.disabled=false;}});
   $('member-pme').addEventListener('change',renderApplications);$('refresh').addEventListener('click',refresh);
+  $('alert-preview-button').addEventListener('click',()=>window.AlertPreferences?.preview(pmes,opportunities,memberIds));
   $('logout').addEventListener('click',async()=>{clearPrivate();$('login').hidden=true;const {error}=await client.auth.signOut();$('login').hidden=false;say(error?'Déconnexion distante non confirmée. Fermez ce navigateur sur un appareil partagé.':'Vous êtes déconnecté.');});
   (async()=>{try{const r=await fetch('/api/pme-config',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const config=await r.json();if(!window.supabase)throw Error();
     testPme=config.testPme?.testOnly===true?config.testPme:null;
+    alertPreferencesEnabled=config.alertPreferencesEnabled===true;
     client=window.supabase.createClient(config.url,config.publishableKey,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
     client.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){clearPrivate();$('login').hidden=false;}else if(event==='SIGNED_IN')setTimeout(session,0);});await session();
   }catch{clearPrivate();say('Espace sécurisé en cours de préparation ou indisponible. Utilisez le suivi local en attendant.');}})();
