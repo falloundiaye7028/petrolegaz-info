@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict'),{AlertPlan}=require('../assets/alert-plan.js'),{Matching}=require('../assets/matching.js');
+const p={id:'recAAAAAAAAAAAAAA',secteur:'Gaz'},q={...p,id:'recBBBBBBBBBBBBBB'};
+const ao={id:'recCCCCCCCCCCCCCC',titre:'Marché gaz',secteur:'Gaz',cloture:'2099-01-01',sourceUrl:'https://example.com/avis',demonstration:false};
+const args={preferences:{enabled:true,frequency:'weekly',min_score:50,consent_version:'alerts-v1',consent_at:'2026-01-01'},pmes:[p,q],opportunities:[ao],membershipIds:[p.id,q.id],matching:Matching,now:Date.parse('2026-01-01')};
+const run=overrides=>AlertPlan.plan({...args,...overrides});
+assert.equal(run({}).length,1);assert.equal(run({})[0].pmeIds.length,2);
+assert.equal(run({membershipIds:[]}).length,0);
+assert.equal(run({seenIds:[ao.id]}).length,0);
+for(const preferences of [null,{...args.preferences,enabled:false},{...args.preferences,consent_version:null},{...args.preferences,min_score:60}])assert.equal(run({preferences}).length,0);
+for(const bad of [{demonstration:true},{cloture:'2020-01-01'},{sourceUrl:'javascript:alert(1)'},{id:'recTEST0000000002'}])assert.equal(run({opportunities:[{...ao,...bad}]}).length,0);
+assert.equal(run({pmes:[{...p,testOnly:true}]}).length,0);
+console.log('PASS: alert dry-run consent, score, revoked access, deduplication, expiry, safe source, demo exclusions.');

@@ -11,5 +11,5 @@ export default function handler(req, res) {
   }
   // Synthetic fixture, never inserted into Airtable or the public directory.
   const testPme=process.env.VERCEL_ENV === 'preview' ? {id:'recTEST0000000001',nom:'PME TEST PétroleGaz — entreprise fictive',secteur:'TEST',localisation:'TEST',description:'Entreprise fictive réservée aux essais de rattachement. Aucune activité réelle.',competences:[],verifie:false,statut:'TEST',testOnly:true} : null;
-  return res.status(200).json({url, publishableKey:key, testPme});
+  return res.status(200).json({url, publishableKey:key, testPme, alertPreferencesEnabled:process.env.VERCEL_ENV === 'preview' || process.env.PME_ALERT_PREFERENCES_ENABLED === 'true', emailSendingEnabled:false});
 }
