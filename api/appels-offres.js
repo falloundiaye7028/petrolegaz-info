@@ -1,6 +1,9 @@
 const BASE_ID = 'appCQuqklwVbrz7XF';
 const AO_TABLE = "Appels d'offres";
 const DONNEURS_TABLE = "Donneurs d'ordre";
+// Existing examples also displayed as demonstrations on the home page.
+// Identify records, not titles or missing URLs, so new notices are unaffected.
+const DEMO_IDS = new Set(['recW9b7mflxZPBKV6', 'rec9WfevTRed1XWJE', 'recqb1YnYtK6sjmUB']);
 
 async function fetchAll(table, token, params = {}) {
   const records = [];
@@ -45,6 +48,7 @@ export default async function handler(req, res) {
       const donneurIds = fields["Donneur d'ordre"];
       return {
         id,
+        demonstration: DEMO_IDS.has(id) || fields['Démonstration'] === true,
         titre: fields.Titre || '',
         description: fields.Description || '',
         donneur: Array.isArray(donneurIds) ? donneursMap[donneurIds[0]] || 'Non précisé' : 'Non précisé',

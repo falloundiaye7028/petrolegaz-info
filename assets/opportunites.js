@@ -16,23 +16,24 @@
     const query=C.text(search.value.trim());
     const filtered=opportunities.filter(ao=>{
       const remaining=days(ao.cloture);
-      const matchesDate=!urgency.value || (urgency.value==='unknown'?remaining===null:urgency.value==='closed'?remaining!==null&&remaining<0:remaining!==null&&remaining>=0&&(urgency.value!=='urgent'||remaining<=7));
+      const matchesDate=!urgency.value || (ao.demonstration!==true && (urgency.value==='unknown'?remaining===null:urgency.value==='closed'?remaining!==null&&remaining<0:remaining!==null&&remaining>=0&&(urgency.value!=='urgent'||remaining<=7)));
       return matchesDate && (!query||C.text([ao.titre,ao.description,ao.donneur,ao.localisation,ao.source,...C.values(ao.secteur)].join(' ')).includes(query)) &&
         (!sector.value||C.values(ao.secteur).includes(sector.value)) && (!buyer.value||ao.donneur===buyer.value);
     });
-    el('result-count').textContent=`${filtered.length} opportunité(s) correspondent à votre recherche`;
+    el('result-count').textContent=`${filtered.length} résultat(s) correspondent à votre recherche`;
     const result=C.paginate(filtered,page,10,el('page-status'),el('previous'),el('next'));page=result.page;
     el('pagination').hidden=filtered.length<=10;
     if(!filtered.length){list.innerHTML='<div class="empty"><p>Aucune opportunité ne correspond à ces critères. Modifiez ou réinitialisez les filtres.</p></div>';return;}
     list.innerHTML=result.items.map(ao=>{
+      const demo=ao.demonstration===true;
       const remaining=days(ao.cloture), closed=remaining!==null&&remaining<0;
-      const badge=remaining===null?'Date inconnue':closed?'Clôturé':remaining===0?"Aujourd’hui":`J-${remaining}`;
-      const cls=remaining===null||closed?'closed':remaining<=7?'urgent':'normal';
+      const badge=demo?'Démonstration':remaining===null?'Date inconnue':closed?'Clôturé':remaining===0?"Aujourd’hui":`J-${remaining}`;
+      const cls=demo||remaining===null||closed?'closed':remaining<=7?'urgent':'normal';
       const url=C.source(ao.sourceUrl)||C.source(ao.source);
-      const source=url?`<a class="source-link" href="${C.escape(url)}" target="_blank" rel="noopener noreferrer">Consulter l’avis source ↗</a>`:'<p class="source-note">Lien de l’avis non renseigné.</p>';
+      const source=demo?'<p class="source-note">Exemple de démonstration, non vérifié auprès de l’organisme cité. Aucune candidature ne doit être envoyée sur cette base.</p>':url?`<a class="source-link" href="${C.escape(url)}" target="_blank" rel="noopener noreferrer">Consulter l’avis source ↗</a>`:'<p class="source-note">Lien de l’avis non renseigné.</p>';
       const formatted=date(ao.cloture)?.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Africa/Dakar'})||'Non précisée';
       const message=C.escape(encodeURIComponent(`Bonjour, je souhaite des informations sur l’appel d’offres : ${ao.titre}`));
-      return `<article class="ao"><div class="ao-header"><h3>${C.escape(ao.titre)}</h3><span class="ao-badge ${cls}">${badge}</span></div><p>${C.escape(ao.description)}</p><div class="ao-tags">${C.values(ao.secteur).map(s=>`<span class="ao-tag">${C.escape(s)}</span>`).join('')}</div><div class="ao-meta"><span>🏢 ${C.escape(ao.donneur)}</span><span>📍 ${C.escape(ao.localisation)}</span><span>📅 Clôture : ${formatted}</span><span>Source : ${C.escape(ao.source||'Non précisée')}</span></div>${source}${closed?'':`<a class="btn-primary" href="https://wa.me/221778001717?text=${message}" target="_blank" rel="noopener noreferrer">Demander des informations</a>`}</article>`;
+      return `<article class="ao"><div class="ao-header"><h3>${C.escape(ao.titre)}</h3><span class="ao-badge ${cls}">${badge}</span></div><p>${C.escape(ao.description)}</p><div class="ao-tags">${C.values(ao.secteur).map(s=>`<span class="ao-tag">${C.escape(s)}</span>`).join('')}</div><div class="ao-meta"><span>🏢 ${demo?'Organisme cité (exemple) : ':''}${C.escape(ao.donneur)}</span><span>📍 ${C.escape(ao.localisation)}</span>${demo?'':`<span>📅 Clôture : ${formatted}</span><span>Source : ${C.escape(ao.source||'Non précisée')}</span>`}</div>${source}${closed||demo?'':`<a class="btn-primary" href="https://wa.me/221778001717?text=${message}" target="_blank" rel="noopener noreferrer">Demander des informations</a>`}</article>`;
     }).join('');
   }
   function resetPage(){page=1;render();}
@@ -51,7 +52,8 @@
       opportunities=data.appelsOffres.filter(ao=>ao&&typeof ao==='object');
       C.options(sector,opportunities.flatMap(ao=>C.values(ao.secteur)),'Tous les secteurs');
       C.options(buyer,opportunities.map(ao=>ao.donneur),'Tous les donneurs d’ordre');
-      el('counter').hidden=false;el('counter').textContent=`${opportunities.length} avis référencés. Vérifiez les conditions et l’heure limite dans l’avis source.`;
+      const demos=opportunities.filter(ao=>ao.demonstration===true).length;
+      el('counter').hidden=false;el('counter').textContent=`${opportunities.length-demos} avis hors démonstration · ${demos} exemple(s) de démonstration. Les exemples sont exclus des filtres de clôture. Vérifiez les conditions des autres avis dans leur source.`;
       ready=true;page=1;render();
     }catch{list.innerHTML='<div class="empty"><p>Impossible de charger les opportunités.</p><button class="retry" type="button">Réessayer</button></div>';list.querySelector('button').addEventListener('click',load);}
     finally{list.setAttribute('aria-busy','false');}
