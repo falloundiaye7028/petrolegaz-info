@@ -9,5 +9,7 @@ export default function handler(req, res) {
   if (!enabled || !/^https:\/\/[a-z0-9]{20}\.supabase\.co$/.test(url) || !/^sb_publishable_[A-Za-z0-9_-]+$/.test(key)) {
     return res.status(503).json({error:'Espace sécurisé en cours de préparation. Le suivi local reste disponible.'});
   }
-  return res.status(200).json({url, publishableKey:key});
+  // Synthetic fixture, never inserted into Airtable or the public directory.
+  const testPme=process.env.VERCEL_ENV === 'preview' ? {id:'recTEST0000000001',nom:'PME TEST PétroleGaz — entreprise fictive',secteur:'TEST',localisation:'TEST',description:'Entreprise fictive réservée aux essais de rattachement. Aucune activité réelle.',competences:[],verifie:false,statut:'TEST',testOnly:true} : null;
+  return res.status(200).json({url, publishableKey:key, testPme});
 }

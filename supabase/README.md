@@ -31,6 +31,8 @@ Dans Supabase Auth > Emails, utiliser `templates/email-otp.html` pour **Magic li
 
 ## Approbation manuelle (opérateur uniquement)
 
+La prévisualisation propose `PME TEST PétroleGaz — entreprise fictive`, identifiant synthétique `recTEST0000000001`, uniquement dans l’espace privé. Aucune fiche Airtable ni entrée d’annuaire public n’est créée. La configuration production n’expose pas cette fixture. Aucun matching réel n’est proposé pour cette PME. Les demandes et rattachements restent soumis aux mêmes RLS et à la validation manuelle : ce profil n’accorde aucun droit automatiquement. Les éventuels enregistrements de recette Supabase doivent être traités comme des données TEST, jamais comme un mandat réel.
+
 Après vérification de l’identité et du mandat par un autre canal, utiliser une transaction SQL : insérer dans `pme_memberships` le `user_id` de la demande et l’identifiant Airtable exact de la PME ; passer la demande correspondante à `approved`. Ne jamais approuver sur le seul texte de la demande. Pour révoquer, supprimer le rattachement ciblé ; les données de suivi sont conservées mais deviennent inaccessibles à ce membre.
 
 ## Tests

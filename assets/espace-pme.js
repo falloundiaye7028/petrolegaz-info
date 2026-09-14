@@ -1,7 +1,7 @@
 (() => {
   const $=id=>document.getElementById(id), E=window.Catalogue.escape;
   const labels={preparing:'À préparer',sent:'Envoyée',discussion:'En échange',accepted:'Retenue',rejected:'Non retenue',abandoned:'Abandonnée'};
-  let client, user, pmes=[], opportunities=[], generation=0, pendingEmail='', authBusy=false;
+  let client, user, pmes=[], opportunities=[], generation=0, pendingEmail='', authBusy=false, testPme=null;
   const callbackParams=new URLSearchParams(location.search), callbackHash=new URLSearchParams(location.hash.slice(1));
   let callbackError=callbackParams.has('error')||callbackHash.has('error');
   if(callbackError){['error','error_code','error_description'].forEach(k=>callbackParams.delete(k));history.replaceState(null,'',location.pathname+(callbackParams.size?'?'+callbackParams:''));}
@@ -27,6 +27,7 @@
       const [catalog,members,requests]=await Promise.all([catalogue(),result(client.from('pme_memberships').select('pme_id')),result(client.from('pme_access_requests').select('pme_id,status').order('created_at',{ascending:false}).limit(100))]);
       if(stamp!==generation)return;
       pmes=catalog[0].pmes;opportunities=catalog[1].appelsOffres;
+      if(testPme&&!pmes.some(p=>p.id===testPme.id))pmes=[testPme,...pmes];
       $('claim-pme').replaceChildren(new Option('Choisir une PME',''),...pmes.map(p=>new Option(p.nom,p.id)));
       const allowed=members.map(m=>new Option(pmes.find(p=>p.id===m.pme_id)?.nom||m.pme_id,m.pme_id));
       $('member-pme').replaceChildren(new Option('Choisir une PME autorisée',''),...allowed);
@@ -40,7 +41,8 @@
     try{
       const rows=await result(client.from('pme_applications').select('opportunity_id,title,status,updated_at').eq('pme_id',pmeId).order('updated_at',{ascending:false}).limit(200));
       if(stamp!==generation)return;
-      const matches=window.Matching.rank(pmes.find(p=>p.id===pmeId),opportunities);
+      const selectedPme=pmes.find(p=>p.id===pmeId);
+      const matches=selectedPme?.testOnly?[]:window.Matching.rank(selectedPme,opportunities);
       $('matches').textContent=matches.length?'Correspondances indicatives — vérifiez les exigences dans l’avis source.':'Aucune correspondance exploitable actuellement.';
       for(const match of matches){const a=match.opportunity,card=document.createElement('article');card.innerHTML=`<h3>${E(a.titre)}</h3><p>Score indicatif ${match.score}/100 : ${E(match.reasons.join(' ; '))}</p><a href="${E(window.Matching.source(a.sourceUrl))}" target="_blank" rel="noopener noreferrer">Vérifier l’avis source</a>`;
         const button=document.createElement('button');button.type='button';button.textContent='Ajouter au suivi privé';button.disabled=rows.some(r=>r.opportunity_id===a.id);
@@ -64,6 +66,7 @@
   $('member-pme').addEventListener('change',renderApplications);$('refresh').addEventListener('click',refresh);
   $('logout').addEventListener('click',async()=>{clearPrivate();$('login').hidden=true;const {error}=await client.auth.signOut();$('login').hidden=false;say(error?'Déconnexion distante non confirmée. Fermez ce navigateur sur un appareil partagé.':'Vous êtes déconnecté.');});
   (async()=>{try{const r=await fetch('/api/pme-config',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const config=await r.json();if(!window.supabase)throw Error();
+    testPme=config.testPme?.testOnly===true?config.testPme:null;
     client=window.supabase.createClient(config.url,config.publishableKey,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
     client.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){clearPrivate();$('login').hidden=false;}else if(event==='SIGNED_IN')setTimeout(session,0);});await session();
   }catch{clearPrivate();say('Espace sécurisé en cours de préparation ou indisponible. Utilisez le suivi local en attendant.');}})();
