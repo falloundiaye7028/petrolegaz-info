@@ -1,5 +1,4 @@
 'use strict';
-const { Webhook } = require('svix');
 const { verifyToken } = require('./alert-token.cjs');
 const PROJECT = 'https://ocyjfjddyijaaunzupxe.supabase.co';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -69,6 +68,9 @@ function webhookHandler({ env = process.env, fetchImpl = fetch } = {}) {
       const raw = await rawBody(req, 65536);
       eventId = req.headers['svix-id'];
       if (typeof eventId !== 'string' || eventId.length > 200) throw new Error('Invalid event');
+      // Svix 2.5 is ESM-only. Dynamic import also works on the deployed Node
+      // runtime, where synchronous require(ESM) is not enabled.
+      const { Webhook } = await import('svix');
       new Webhook(env.RESEND_WEBHOOK_SECRET).verify(raw, {
         'svix-id': eventId, 'svix-timestamp': req.headers['svix-timestamp'], 'svix-signature': req.headers['svix-signature'],
       });

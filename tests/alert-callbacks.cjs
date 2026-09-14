@@ -1,6 +1,5 @@
 const assert = require('node:assert/strict');
 const { Readable } = require('node:stream');
-const { Webhook } = require('svix');
 const { createToken } = require('../server/alert-token.cjs');
 const { unsubscribeHandler, webhookHandler } = require('../server/alert-callbacks.cjs');
 const uid = '11111111-1111-4111-8111-111111111111';
@@ -17,6 +16,7 @@ async function run(handler, { method = 'POST', body = '', headers = {}, query = 
   await handler(req, response); return response;
 }
 (async () => {
+  const { Webhook } = await import('svix');
   const calls = [];
   const fetchImpl = async (url, options) => { calls.push({ url, body: JSON.parse(options.body) }); return { ok: true }; };
   const unsub = unsubscribeHandler({ env, fetchImpl });
