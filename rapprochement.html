@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rapprochement et suivi — PétroleGaz Info</title><meta name="robots" content="noindex,follow">
+<link rel="stylesheet" href="assets/donneurs-ordre.css"><link rel="stylesheet" href="assets/catalogue.css">
+<style>select,button{font:inherit;padding:10px;max-width:100%}article{background:white;border:1px solid #cbd5e1;border-radius:12px;padding:20px;margin:16px 0;overflow-wrap:anywhere}article label{display:block;margin-top:12px}nav{display:flex;flex-wrap:wrap;gap:20px;padding:20px}button{cursor:pointer}a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #0b3d91;outline-offset:3px}</style></head>
+<body><header><nav aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="annuaire.html">Annuaire PME</a><a href="appels-offres.html">Opportunités</a></nav></header>
+<main class="container"><h1>Rapprochement PME–opportunités</h1>
+<aside class="notice"><p>Outil exploratoire, sans connexion ni preuve de propriété d’une fiche. Le score mesure des points communs, pas votre éligibilité. Vérifiez les exigences, documents et certifications dans l’avis source.</p><p>Le suivi et les alertes sont conservés uniquement dans ce navigateur, sur cet appareil. Aucun email, aucune candidature ni donnée de suivi n’est envoyé. N’utilisez pas un appareil partagé pour votre suivi.</p></aside>
+<label for="pme">Profil PME à explorer</label> <select id="pme" disabled><option value="">Chargement…</option></select>
+<p id="profile-note"></p><p id="load-status" role="status"></p><button id="reload" type="button">Actualiser les opportunités</button>
+<section aria-labelledby="alerts-heading"><h2 id="alerts-heading">Alertes sur cet appareil</h2><label><input type="checkbox" id="alerts" disabled> Signaler les nouvelles correspondances à l’ouverture ou à l’actualisation</label><p id="alert-status" role="status"></p><button id="read" type="button" disabled>Marquer les correspondances comme vues</button></section>
+<section><h2>Correspondances</h2><p>Secteur commun : 50 points ; compétence citée : 20 points (maximum 40) ; localisation identique : 10 points. La localisation seule ne suffit pas. Les démonstrations, avis sans lien source ou sans date valide, et avis clôturés sont exclus.</p><div id="matches" aria-live="polite"></div></section>
+<section><h2>Suivi des candidatures</h2><p>Statuts déclaratifs : « Envoyée » signifie que vous indiquez avoir envoyé votre dossier par un autre canal. Ce n’est pas une confirmation de l’acheteur.</p><div id="tracking"></div></section>
+<p id="storage-status" role="status"></p><button id="clear" type="button">Effacer le suivi et les alertes de ce navigateur</button>
+<noscript>JavaScript est nécessaire pour utiliser cet outil.</noscript></main>
+<script src="assets/catalogue.js"></script><script src="assets/matching.js"></script><script src="assets/rapprochement.js"></script></body></html>
