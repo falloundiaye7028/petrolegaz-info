@@ -4,8 +4,30 @@
   let opportunities=[], page=1, ready=false;
   function date(value) {
     if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(value))return null;
+    if(value.length>10&&!Number.isFinite(Date.parse(value)))return null;
     const d=new Date(value.slice(0,10)+'T00:00:00Z');
     return Number.isFinite(d.getTime()) && d.toISOString().slice(0,10)===value.slice(0,10)?d:null;
+  }
+  function closedAt(value) {
+    const d=date(value);if(!d)return false;
+    const cutoff=value.length===10?d.getTime()+86400000:Date.parse(value);
+    return Number.isFinite(cutoff)&&Date.now()>=cutoff;
+  }
+  function formattedDate(value) {
+    const day=date(value);if(!day)return 'Non précisée';
+    const timed=value.length>10&&Number.isFinite(Date.parse(value));
+    const d=timed?new Date(value):day;
+    return d.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Africa/Dakar'})+
+      (timed?' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:'Africa/Dakar'})+' (Dakar, GMT)':'');
+  }
+  function details(ao) {
+    const rows=[['Conditions de participation',ao.eligibilite],['Dépôt',ao.soumission],['Dossier',ao.documents],
+      ['Garantie de soumission',ao.garantieSoumissionFcfa?new Intl.NumberFormat('fr-FR').format(ao.garantieSoumissionFcfa)+' FCFA (ce n’est pas le budget du marché)':''],
+      ['Visite',ao.visite],['Ouverture',ao.ouverture],['Exécution',ao.execution],['Profil concerné',ao.pertinence]];
+    const present=rows.filter(([,value])=>value);
+    if(!present.length)return '';
+    const officialList=C.source(ao.listeSourceUrl);
+    return `<details class="notice-details"><summary>Conditions et modalités</summary><dl>${present.map(([label,value])=>`<dt>${C.escape(label)}</dt><dd>${C.escape(value)}</dd>`).join('')}</dl><p>Vérifiez l’avis, le dossier et les éventuels additifs avant toute candidature. L’admissibilité dépend de votre entreprise.</p>${officialList?`<a class="source-link" href="${C.escape(officialList)}" target="_blank" rel="noopener noreferrer">Vérifier la liste et les additifs officiels ↗</a>`:''}</details>`;
   }
   function days(value) {
     const d=date(value);if(!d)return null;
@@ -16,8 +38,8 @@
     const query=C.text(search.value.trim());
     const filtered=opportunities.filter(ao=>{
       const remaining=days(ao.cloture);
-      const matchesDate=!urgency.value || (ao.demonstration!==true && (urgency.value==='unknown'?remaining===null:urgency.value==='closed'?remaining!==null&&remaining<0:remaining!==null&&remaining>=0&&(urgency.value!=='urgent'||remaining<=7)));
-      return matchesDate && (!query||C.text([ao.titre,ao.description,ao.donneur,ao.localisation,ao.source,...C.values(ao.secteur)].join(' ')).includes(query)) &&
+      const matchesDate=!urgency.value || (ao.demonstration!==true && (urgency.value==='unknown'?remaining===null:urgency.value==='closed'?remaining!==null&&closedAt(ao.cloture):remaining!==null&&!closedAt(ao.cloture)&&(urgency.value!=='urgent'||remaining<=7)));
+      return matchesDate && (!query||C.text([ao.titre,ao.reference,ao.typeAvis,ao.description,ao.donneur,ao.localisation,ao.source,...C.values(ao.secteur)].join(' ')).includes(query)) &&
         (!sector.value||C.values(ao.secteur).includes(sector.value)) && (!buyer.value||ao.donneur===buyer.value);
     });
     el('result-count').textContent=`${filtered.length} résultat(s) correspondent à votre recherche`;
@@ -26,14 +48,14 @@
     if(!filtered.length){list.innerHTML='<div class="empty"><p>Aucune opportunité ne correspond à ces critères. Modifiez ou réinitialisez les filtres.</p></div>';return;}
     list.innerHTML=result.items.map(ao=>{
       const demo=ao.demonstration===true;
-      const remaining=days(ao.cloture), closed=remaining!==null&&remaining<0;
+      const remaining=days(ao.cloture), closed=remaining!==null&&closedAt(ao.cloture);
       const badge=demo?'Démonstration':remaining===null?'Date inconnue':closed?'Clôturé':remaining===0?"Aujourd’hui":`J-${remaining}`;
       const cls=demo||remaining===null||closed?'closed':remaining<=7?'urgent':'normal';
       const url=C.source(ao.sourceUrl)||C.source(ao.source);
-      const source=demo?'<p class="source-note">Exemple de démonstration, non vérifié auprès de l’organisme cité. Aucune candidature ne doit être envoyée sur cette base.</p>':url?`<a class="source-link" href="${C.escape(url)}" target="_blank" rel="noopener noreferrer">Consulter l’avis source ↗</a>`:'<p class="source-note">Lien de l’avis non renseigné.</p>';
-      const formatted=date(ao.cloture)?.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Africa/Dakar'})||'Non précisée';
+      const source=demo?'<p class="source-note">Exemple de démonstration, non vérifié auprès de l’organisme cité. Aucune candidature ne doit être envoyée sur cette base.</p>':url?`<a class="source-link" href="${C.escape(url)}" target="_blank" rel="noopener noreferrer">${C.escape(ao.sourceLabel||'Consulter l’avis source ↗')}</a>`:'<p class="source-note">Lien de l’avis non renseigné.</p>';
+      const formatted=formattedDate(ao.cloture);
       const message=C.escape(encodeURIComponent(`Bonjour, je souhaite des informations sur l’appel d’offres : ${ao.titre}`));
-      return `<article class="ao"><div class="ao-header"><h3>${C.escape(ao.titre)}</h3><span class="ao-badge ${cls}">${badge}</span></div><p>${C.escape(ao.description)}</p><div class="ao-tags">${C.values(ao.secteur).map(s=>`<span class="ao-tag">${C.escape(s)}</span>`).join('')}</div><div class="ao-meta"><span>🏢 ${demo?'Organisme cité (exemple) : ':''}${C.escape(ao.donneur)}</span><span>📍 ${C.escape(ao.localisation)}</span>${demo?'':`<span>📅 Clôture : ${formatted}</span><span>Source : ${C.escape(ao.source||'Non précisée')}</span>`}</div>${source}${closed||demo?'':`<a class="btn-primary" href="https://wa.me/221778001717?text=${message}" target="_blank" rel="noopener noreferrer">Demander des informations</a>`}</article>`;
+      return `<article class="ao" data-notice-id="${C.escape(ao.id)}"><div class="ao-header"><h3>${C.escape(ao.titre)}</h3><span class="ao-badge ${cls}">${badge}</span></div>${!demo&&ao.reference?`<p class="notice-reference">${C.escape(ao.typeAvis||'Avis de marché')} · ${C.escape(ao.reference)}</p>`:''}<p>${C.escape(ao.description)}</p>${!demo&&ao.avertissement?`<p class="notice-warning">${C.escape(ao.avertissement)}</p>`:''}<div class="ao-tags">${C.values(ao.secteur).map(s=>`<span class="ao-tag">${C.escape(s)}</span>`).join('')}</div><div class="ao-meta"><span>🏢 ${demo?'Organisme cité (exemple) : ':''}${C.escape(ao.donneur)}</span><span>📍 ${C.escape(ao.localisation)}</span>${demo?'':`<span>📅 Clôture : ${formatted}</span><span>Source : ${C.escape(ao.source||'Non précisée')}</span>`}</div>${!demo&&ao.verifieLe?`<p class="source-note">Source contrôlée le ${formattedDate(ao.verifieLe)}. ${ao.publication?'Publication : '+formattedDate(ao.publication)+'.':'Date de publication non indiquée.'}</p>`:''}${!demo?details(ao):''}${source}${closed||demo?'':`<a class="btn-primary" href="https://wa.me/221778001717?text=${message}" target="_blank" rel="noopener noreferrer">Demander des informations</a>`}</article>`;
     }).join('');
   }
   function resetPage(){page=1;render();}

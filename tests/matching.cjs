@@ -5,6 +5,13 @@ const pme = { secteur: 'Énergie', localisation: 'Dakar', competences: ['Électr
 const ao = { id: 'a', demonstration: false, titre: 'Électricité et HSE', secteur: ['Energie'], localisation: 'DAKAR', sourceUrl: 'https://example.org/avis', cloture: '2026-09-14' };
 assert.equal(M.match(pme, ao, now).score, 100);
 assert.equal(M.match(pme, {...ao, cloture:'2026-09-13'}, now), null);
+const timed={...ao,cloture:'2026-10-07T10:00:00+00:00'};
+assert.ok(M.match(pme,timed,Date.parse('2026-10-07T09:59:59Z')));
+assert.equal(M.match(pme,timed,Date.parse('2026-10-07T10:00:00Z')),null);
+assert.equal(M.match(pme,{...ao,cloture:'2026-10-21T09:30:00+00:00'},Date.parse('2026-10-21T09:30:01Z')),null);
+assert.equal(M.match(pme,{...ao,cloture:'2026-10-07Tbad'},now),null);
+assert.ok(M.match(pme,ao,Date.parse('2026-09-14T23:59:59Z')));
+assert.equal(M.match(pme,ao,Date.parse('2026-09-15T00:00:00Z')),null);
 assert.equal(M.match(pme, {...ao, cloture:'2026-02-30'}, now), null);
 for (const cloture of [null, '', 'invalide']) assert.equal(M.match(pme, {...ao, cloture}, now), null);
 for (const demonstration of [true, undefined]) assert.equal(M.match(pme, {...ao, demonstration}, now), null);

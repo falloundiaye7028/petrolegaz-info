@@ -4,14 +4,16 @@
   const values = v => Array.isArray(v) ? v : v ? [v] : [];
   function deadline(value) {
     if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}(?:$|T)/.test(value)) return null;
-    const day = value.slice(0, 10), ms = Date.parse(day + 'T23:59:59.999Z');
-    return Number.isFinite(ms) && new Date(ms).toISOString().slice(0, 10) === day ? ms : null;
+    const day = value.slice(0, 10), midnight = Date.parse(day + 'T00:00:00Z');
+    if (!Number.isFinite(midnight) || new Date(midnight).toISOString().slice(0, 10) !== day) return null;
+    const ms = value.length === 10 ? midnight + 86400000 : Date.parse(value);
+    return Number.isFinite(ms) ? ms : null;
   }
   function source(value) {
     try { const u = new URL(value); return /^https?:$/.test(u.protocol) && !u.username && !u.password ? u.href : ''; } catch { return ''; }
   }
   function match(pme, ao, now = Date.now()) {
-    if (!pme || !ao || !ao.id || ao.demonstration !== false || !source(ao.sourceUrl) || deadline(ao.cloture) === null || deadline(ao.cloture) < now) return null;
+    if (!pme || !ao || !ao.id || ao.demonstration !== false || !source(ao.sourceUrl) || deadline(ao.cloture) === null || deadline(ao.cloture) <= now) return null;
     const sectors = values(pme.secteur).map(text).filter(Boolean);
     const sameSector = values(ao.secteur).some(v => sectors.includes(text(v)));
     const haystack = ' ' + text([ao.titre, ao.description, ...values(ao.secteur)].join(' ')) + ' ';
