@@ -1,0 +1,9 @@
+{
+  "name": "petrolegaz-info",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site PétroleGaz et fonctions serveur",
+  "dependencies": {
+    "svix": "2.5.0"
+  }
+}
