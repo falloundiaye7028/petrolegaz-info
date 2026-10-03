@@ -9,7 +9,7 @@
 
 .nav { position: relative; }
 
-@media (max-width: 640px) {
+@media (max-width: 1200px) {
   .nav-links { display: none !important; }
   .nav-links.mobile-open {
     display: flex !important;
@@ -28,3 +28,5 @@
   .nav-links.mobile-open a { display: block !important; }
   .menu-toggle { display: block; }
 }
+
+@media (min-width: 1201px) { header .nav-links { gap: 16px; } header .nav-links a { font-size: 13px; } }
