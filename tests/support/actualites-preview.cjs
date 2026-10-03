@@ -1,7 +1,7 @@
 /* Local-only visual QA server. Never deploy. All example news is explicitly TEST. */
 'use strict';
 const http = require('node:http'), fs = require('node:fs'), path = require('node:path');
-const root = path.resolve(__dirname, '..');
+const root = path.resolve(__dirname, '../..');
 const modes = new Set(['empty', 'populated', 'unavailable', 'notfound', 'xss', 'race']);
 const apiRequests = [];
 function article(n) {

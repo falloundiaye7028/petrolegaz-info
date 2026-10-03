@@ -2,7 +2,7 @@
 
 ## État de livraison
 
-Le code de la rubrique et son API de lecture sont préparés. L’accès au compte Airtable existant et à la base PétroleGaz Info a été vérifié. **L’installation de la table `Actualités` et de son schéma reste en attente ; elle n’a pas été effectuée. L’activation et le déploiement du site ne sont pas confirmés.** La publication éditoriale ne sera opérationnelle qu’après cette installation et une recette réelle.
+Le code de la rubrique et son API de lecture sont préparés. L’accès au compte Airtable existant et à la base PétroleGaz Info a été vérifié. **L’installation de la table `Actualités` et de son schéma reste en attente ; elle n’a pas été effectuée. La rubrique n’est pas activée en production. Une prévisualisation de la branche est déployée, mais l’API Actualités y renvoie encore une indisponibilité tant que la table manque.** La publication éditoriale ne sera opérationnelle qu’après cette installation et une recette réelle.
 
 Aucun article de démonstration n’est ajouté au catalogue public. Les tests utilisent exclusivement des données locales fictives. Aucun article, compte, jeton ou droit d’accès Airtable n’est créé ou modifié par ce code.
 
@@ -157,7 +157,10 @@ Les formules filtrent côté Airtable, puis l’API revalide chaque enregistreme
 
 ```sh
 node tests/actualites-api.cjs
+node tests/actualites-dom.cjs
 ```
+
+Voir [le bilan de recette et les commandes complètes](tests/ACTUALITES-QA.md). Les tests DOM sont isolés ; ils ne remplacent pas une vérification visuelle dans un vrai navigateur.
 
 La suite vérifie notamment : contrat public, champs privés exclus, brouillons/archives/dates futures bloqués même en fiche directe, dates invalides, liens dangereux, photos optionnelles, texte ressemblant à du HTML, recherche accentuée et échappement des formules, pagination bornée, curseurs expirés, méthode GET seule, table vide distincte d’une configuration absente, erreurs amont et délai maximal. Les fixtures ne sont jamais écrites dans Airtable.
 

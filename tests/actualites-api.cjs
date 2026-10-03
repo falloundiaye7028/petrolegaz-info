@@ -10,14 +10,14 @@ class Clock extends Date { static now() { return NOW; } }
 const clean = value => JSON.parse(JSON.stringify(value));
 const id = n => `rec${String(n).padStart(14, '0')}`;
 const article = (n = 1, changes = {}) => ({ id: id(n), createdTime: 'private-created-time', fields: {
-  Titre: 'Projet gazier au Sénégal', Résumé: 'Une information vérifiée.',
-  Contenu: 'Premier paragraphe.\r\n\r\nDeuxième paragraphe.', Catégorie: 'Gaz',
-  Organisation: 'Organisation exemple', 'Type d’acteur': 'Institution', Localisation: 'Dakar',
-  'Date de publication': '2026-10-02T12:30:00.000Z', Source: 'Communiqué officiel',
-  'Lien source': 'https://example.com/communique', Statut: 'Publié', Slug: 'projet-gazier',
+  Titre: 'TEST — Projet gazier au Sénégal', Résumé: 'TEST — Une information vérifiée.',
+  Contenu: 'TEST — Premier paragraphe.\r\n\r\nTEST — Deuxième paragraphe.', Catégorie: 'Gaz',
+  Organisation: 'TEST — Organisation exemple', 'Type d’acteur': 'Institution', Localisation: 'TEST — Dakar',
+  'Date de publication': '2026-10-02T12:30:00.000Z', Source: 'TEST — Communiqué officiel',
+  'Lien source': 'https://example.com/communique', Statut: 'Publié', Slug: 'test-projet-gazier',
   Photo: [{ url: 'https://images.example.com/photo.jpg', type: 'image/jpeg', filename: 'private-filename.jpg',
     thumbnails: { full: { url: 'https://private.example.com/' } }, id: 'private-attachment-id' }],
-  'Légende photo': 'Vue du site.', 'Crédit photo': 'Auteur autorisé',
+  'Légende photo': 'TEST — Vue du site.', 'Crédit photo': 'TEST — Auteur autorisé',
   Email: 'private@example.com', Notes: 'private-editorial-note', ...changes,
 } });
 const ok = (records, offset) => ({ ok: true, status: 200, json: async () => ({ records, ...(offset ? { offset } : {}) }) });
@@ -54,8 +54,8 @@ function fixture(fetcher = async () => ok([article()]), env = { AIRTABLE_TOKEN: 
   assert.equal(result.data.count, 1);
   assert.equal(result.data.hasMore, false);
   assert.equal(result.data.nextCursor, null);
-  assert.equal(result.data.articles[0].body, 'Premier paragraphe.\n\nDeuxième paragraphe.');
-  assert.equal(result.data.articles[0].image.alt, 'Vue du site.');
+  assert.equal(result.data.articles[0].body, 'TEST — Premier paragraphe.\n\nTEST — Deuxième paragraphe.');
+  assert.equal(result.data.articles[0].image.alt, 'TEST — Vue du site.');
   assert.equal(result.data.articles[0].publishedAt, '2026-10-02T12:30:00.000Z');
   assert.equal(result.headers['Cache-Control'], 'no-store');
   assert.equal(result.headers['X-Content-Type-Options'], 'nosniff');
@@ -126,7 +126,7 @@ function fixture(fetcher = async () => ok([article()]), env = { AIRTABLE_TOKEN: 
   app = fixture(async () => ok([article(1, { Photo: [], 'Légende photo': '' })]));
   assert.equal((await app.request()).data.articles[0].image, null);
   app = fixture(async () => ok([article(1, { 'Légende photo': '' })]));
-  assert.equal((await app.request()).data.articles[0].image.alt, 'Projet gazier au Sénégal');
+  assert.equal((await app.request()).data.articles[0].image.alt, 'TEST — Projet gazier au Sénégal');
 
   // Detail has the same publication gate and exposes only the requested record.
   app = fixture();

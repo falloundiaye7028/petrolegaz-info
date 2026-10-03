@@ -9,7 +9,7 @@ const fs = require('node:fs');
 const http = require('node:http');
 const os = require('node:os');
 const path = require('node:path');
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || '/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const root = path.resolve(__dirname, '..');
 const output = process.env.NEWS_QA_OUTPUT_DIR || path.join(os.tmpdir(), 'petrolegaz-news-qa');
 const imageUrl = 'https://fixtures.test/TEST-news.svg';
@@ -325,6 +325,18 @@ async function close(page) {
       await noOverflow(page);
       if ([360, 390, 1440].includes(width)) await screenshot(page, 'TEST-news-detail-' + width);
       await close(page);
+    }
+  });
+
+  await check('empty and unavailable desktop/mobile screenshots are clearly distinguished', async () => {
+    for (const width of [360, 390, 1440]) {
+      for (const state of ['empty', 'unavailable']) {
+        const page = await newPage(() => state === 'empty' ? pageData([]) : { status: 503, data: { code: 'NOT_CONFIGURED', error: 'TEST unavailable' } }, { width, height: 900 });
+        await go(page); await noOverflow(page);
+        await assertText(page, '#news-list h2', state === 'empty' ? /premières publications/ : /momentanément indisponibles/);
+        await screenshot(page, 'local-preview-' + state + '-' + width);
+        await close(page);
+      }
     }
   });
 
