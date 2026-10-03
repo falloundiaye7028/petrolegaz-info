@@ -17,6 +17,10 @@
     if (!nav.contains(event.target) && !button.contains(event.target)) closeMenu();
   });
 
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && nav.classList.contains('mobile-open')) { closeMenu(); button.focus(); }
+  });
+
   nav.querySelectorAll('a').forEach(function (link) {
     link.addEventListener('click', closeMenu);
   });
